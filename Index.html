@@ -126,6 +126,66 @@ body {
   object-fit: contain;
 }
 
+/* ===== VIDEO PAGE SPECIAL ===== */
+.video-page .media-content {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Hide video controls */
+video::-webkit-media-controls {
+  display: none !important;
+}
+
+video::-webkit-media-controls-enclosure {
+  display: none !important;
+}
+
+video::-webkit-media-controls-panel {
+  display: none !important;
+}
+
+video::-webkit-media-controls-play-button {
+  display: none !important;
+}
+
+video::-webkit-media-controls-timeline {
+  display: none !important;
+}
+
+video::-webkit-media-controls-current-time-display {
+  display: none !important;
+}
+
+video::-webkit-media-controls-time-remaining-display {
+  display: none !important;
+}
+
+video::-webkit-media-controls-timeline-container {
+  display: none !important;
+}
+
+video::-webkit-media-controls-volume-slider-container {
+  display: none !important;
+}
+
+video::-webkit-media-controls-volume-slider {
+  display: none !important;
+}
+
+video::-webkit-media-controls-mute-button {
+  display: none !important;
+}
+
+video::-webkit-media-controls-toggle-closed-captions-button {
+  display: none !important;
+}
+
+video::-webkit-media-controls-fullscreen-button {
+  display: none !important;
+}
+
 /* ===== MINIMAL PROGRESS INDICATOR ===== */
 .progress-container {
   position: fixed;
@@ -222,6 +282,21 @@ body {
   opacity: 0.8;
 }
 
+/* ===== FINAL VIDEO INDICATOR ===== */
+.video-audio-indicator {
+  position: fixed;
+  bottom: 50px;
+  right: 20px;
+  font-size: 0.8rem;
+  opacity: 0.4;
+  z-index: 1001;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 5px 10px;
+  border-radius: 10px;
+  display: none;
+  pointer-events: none;
+}
+
 /* ===== FALLBACK STYLING ===== */
 .media-fallback {
   position: absolute;
@@ -251,6 +326,7 @@ body {
 <div class="nav-dots" id="navDots"></div>
 
 <div class="control-hint">← → or click to navigate</div>
+<div class="video-audio-indicator" id="videoAudioIndicator">🎵 Audio On</div>
 
 <!-- ===== PAGE 1: LOGIN ===== -->
 <section class="section active" id="login">
@@ -272,7 +348,7 @@ body {
   </div>
 </section>
 
-<!-- ===== PAGE 2-6: MEDIA PAGES ===== -->
+<!-- ===== PAGE 2: FIRST IMAGE ===== -->
 <section class="section media-page" id="page2">
   <img src="image1.jpg" class="media-content" alt="Memory 1"
        onerror="handleMediaError(this, 'fallback2')">
@@ -281,16 +357,18 @@ body {
   </div>
 </section>
 
-<section class="section media-page" id="page3">
+<!-- ===== PAGE 3: FIRST VIDEO (MUTED) ===== -->
+<section class="section media-page video-page" id="page3">
   <video id="birthdayVideo" class="media-content" autoplay muted playsinline loop
          onerror="handleVideoError('fallback3')">
     <source src="video.mp4" type="video/mp4">
   </video>
   <div id="fallback3" class="media-fallback" style="display:none;">
-    🎥 Video
+    🎥 Video 1
   </div>
 </section>
 
+<!-- ===== PAGE 4: SECOND IMAGE ===== -->
 <section class="section media-page" id="page4">
   <img src="image2.jpg" class="media-content" alt="Memory 2"
        onerror="handleMediaError(this, 'fallback4')">
@@ -299,6 +377,7 @@ body {
   </div>
 </section>
 
+<!-- ===== PAGE 5: THIRD IMAGE ===== -->
 <section class="section media-page" id="page5">
   <img src="image3.jpg" class="media-content" alt="Memory 3"
        onerror="handleMediaError(this, 'fallback5')">
@@ -307,11 +386,23 @@ body {
   </div>
 </section>
 
+<!-- ===== PAGE 6: FOURTH IMAGE ===== -->
 <section class="section media-page" id="page6">
   <img src="image4.jpg" class="media-content" alt="Final"
        onerror="handleMediaError(this, 'fallback6')">
   <div id="fallback6" class="media-fallback" style="display:none;">
-    💫 Final
+    💫 Image 4
+  </div>
+</section>
+
+<!-- ===== PAGE 7: FINAL VIDEO WITH AUDIO ===== -->
+<section class="section media-page video-page" id="page7">
+  <video id="finalVideo" class="media-content" playsinline autoplay
+         onerror="handleFinalVideoError('fallback7')">
+    <source src="final_video.mp4" type="video/mp4">
+  </video>
+  <div id="fallback7" class="media-fallback" style="display:none;">
+    🎬 Final Video
   </div>
 </section>
 
@@ -323,8 +414,9 @@ body {
 <script>
 // ===== CONFIG =====
 const PASSWORD = "01022026";
-const PAGES = ["login", "page2", "page3", "page4", "page5", "page6"];
+const PAGES = ["login", "page2", "page3", "page4", "page5", "page6", "page7"];
 let currentPageIndex = 0;
+let bgMusicPlaying = false;
 
 // ===== ELEMENTS =====
 const bgMusic = document.getElementById('backgroundMusic');
@@ -333,6 +425,8 @@ const progressContainer = document.getElementById('progressContainer');
 const pageCounter = document.getElementById('pageCounter');
 const homeBtn = document.getElementById('homeBtn');
 const navDots = document.getElementById('navDots');
+const videoAudioIndicator = document.getElementById('videoAudioIndicator');
+const finalVideo = document.getElementById('finalVideo');
 
 // ===== INITIALIZE NAV DOTS =====
 function createNavDots() {
@@ -355,7 +449,11 @@ function showPage(pageId) {
   const pageEl = document.getElementById(pageId);
   if (pageEl) {
     pageEl.classList.add('active');
+    const oldPageIndex = currentPageIndex;
     currentPageIndex = PAGES.indexOf(pageId);
+    
+    // Handle music based on page changes
+    handleMusicTransition(oldPageIndex, currentPageIndex);
     
     // Update UI elements
     updateProgress();
@@ -363,13 +461,71 @@ function showPage(pageId) {
     updateNavDots();
     updateHomeButton();
     
-    // Auto-play video on page 3
+    // Handle video pages
     if (pageId === 'page3') {
       const video = document.getElementById('birthdayVideo');
       if (video) {
         video.currentTime = 0;
         video.play().catch(console.log);
       }
+      videoAudioIndicator.style.display = 'none';
+    } else if (pageId === 'page7') {
+      // Final video page
+      if (finalVideo) {
+        // Stop BGM
+        if (bgMusicPlaying) {
+          bgMusic.pause();
+          bgMusicPlaying = false;
+        }
+        
+        // Play final video with audio (autoplay)
+        finalVideo.muted = false;
+        finalVideo.volume = 1.0;
+        
+        // Try autoplay with audio
+        const playPromise = finalVideo.play();
+        
+        if (playPromise !== undefined) {
+          playPromise.then(() => {
+            console.log('Final video playing with audio');
+            videoAudioIndicator.style.display = 'block';
+            videoAudioIndicator.style.opacity = '0.4';
+          }).catch(error => {
+            console.log('Autoplay with audio failed:', error);
+            // Fallback: mute and play, then unmute
+            finalVideo.muted = true;
+            finalVideo.play().then(() => {
+              // Try to unmute after playing
+              setTimeout(() => {
+                finalVideo.muted = false;
+              }, 1000);
+              videoAudioIndicator.style.display = 'block';
+              videoAudioIndicator.style.opacity = '0.4';
+            });
+          });
+        }
+      }
+    } else {
+      // Hide audio indicator on non-video pages
+      videoAudioIndicator.style.display = 'none';
+    }
+  }
+}
+
+function handleMusicTransition(oldIndex, newIndex) {
+  // If going to final video page (page7) from anywhere
+  if (newIndex === 6) { // page7 is index 6
+    if (bgMusicPlaying) {
+      bgMusic.pause();
+      bgMusicPlaying = false;
+    }
+  }
+  // If leaving final video page and BGM should resume
+  else if (oldIndex === 6 && newIndex < 6 && newIndex > 0) {
+    if (!bgMusicPlaying) {
+      bgMusic.play().then(() => {
+        bgMusicPlaying = true;
+      }).catch(console.log);
     }
   }
 }
@@ -448,7 +604,11 @@ function unlock() {
     
     // Start music
     bgMusic.volume = 0.3;
-    bgMusic.play().catch(e => console.log('Music:', e));
+    bgMusic.play()
+      .then(() => {
+        bgMusicPlaying = true;
+      })
+      .catch(e => console.log('Music error:', e));
     
     // Go to first media page
     showPage('page2');
@@ -479,6 +639,13 @@ function handleVideoError(fallbackId) {
   if (fallback) fallback.style.display = 'block';
 }
 
+function handleFinalVideoError(fallbackId) {
+  console.log('Final video failed');
+  const fallback = document.getElementById(fallbackId);
+  if (fallback) fallback.style.display = 'block';
+  videoAudioIndicator.style.display = 'none';
+}
+
 // ===== EVENT LISTENERS =====
 document.addEventListener('DOMContentLoaded', () => {
   // Initialize UI
@@ -492,11 +659,12 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Click to advance (full screen)
   document.addEventListener('click', (e) => {
-    // Don't trigger on buttons or inputs
+    // Don't trigger on buttons, inputs, or dots
     if (e.target.tagName === 'BUTTON' || 
         e.target.tagName === 'INPUT' ||
         e.target.closest('.nav-dots') ||
-        e.target.closest('.home-btn')) {
+        e.target.closest('.home-btn') ||
+        e.target.closest('.video-audio-indicator')) {
       return;
     }
     
@@ -549,14 +717,41 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, { passive: true });
   
-  // Video loop
-  const video = document.getElementById('birthdayVideo');
-  if (video) {
-    video.addEventListener('ended', () => {
-      video.currentTime = 0;
-      video.play();
+  // First video loop
+  const firstVideo = document.getElementById('birthdayVideo');
+  if (firstVideo) {
+    firstVideo.addEventListener('ended', () => {
+      firstVideo.currentTime = 0;
+      firstVideo.play();
     });
   }
+  
+  // Final video event handlers
+  if (finalVideo) {
+    // Loop the final video
+    finalVideo.addEventListener('ended', () => {
+      finalVideo.currentTime = 0;
+      finalVideo.play();
+    });
+    
+    // Handle play state changes
+    finalVideo.addEventListener('play', () => {
+      videoAudioIndicator.style.opacity = '0.4';
+    });
+    
+    finalVideo.addEventListener('pause', () => {
+      videoAudioIndicator.style.opacity = '0.2';
+    });
+  }
+  
+  // Page visibility change - pause BGM when tab is hidden
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && bgMusicPlaying && currentPageIndex !== 6) {
+      bgMusic.pause();
+    } else if (!document.hidden && !bgMusicPlaying && currentPageIndex > 0 && currentPageIndex < 6) {
+      bgMusic.play().catch(console.log);
+    }
+  });
   
   // Auto-focus password on login
   document.getElementById('password').focus();
