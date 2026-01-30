@@ -134,7 +134,7 @@ body {
 }
 
 /* ===== VOICE NOTE PAGE ===== */
-#voiceNote {
+#page8 {
   background: linear-gradient(135deg, #1a1a2e, #16213e);
   display: flex;
   flex-direction: column;
@@ -270,54 +270,6 @@ video::-webkit-media-controls {
   display: none !important;
 }
 
-video::-webkit-media-controls-enclosure {
-  display: none !important;
-}
-
-video::-webkit-media-controls-panel {
-  display: none !important;
-}
-
-video::-webkit-media-controls-play-button {
-  display: none !important;
-}
-
-video::-webkit-media-controls-timeline {
-  display: none !important;
-}
-
-video::-webkit-media-controls-current-time-display {
-  display: none !important;
-}
-
-video::-webkit-media-controls-time-remaining-display {
-  display: none !important;
-}
-
-video::-webkit-media-controls-timeline-container {
-  display: none !important;
-}
-
-video::-webkit-media-controls-volume-slider-container {
-  display: none !important;
-}
-
-video::-webkit-media-controls-volume-slider {
-  display: none !important;
-}
-
-video::-webkit-media-controls-mute-button {
-  display: none !important;
-}
-
-video::-webkit-media-controls-toggle-closed-captions-button {
-  display: none !important;
-}
-
-video::-webkit-media-controls-fullscreen-button {
-  display: none !important;
-}
-
 /* ===== MINIMAL PROGRESS INDICATOR ===== */
 .progress-container {
   position: fixed;
@@ -439,6 +391,23 @@ video::-webkit-media-controls-fullscreen-button {
   opacity: 0.5;
   font-size: 0.9rem;
 }
+
+/* ===== LOADING INDICATOR ===== */
+.loading-indicator {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  z-index: 2000;
+}
+
+.loading-indicator.show {
+  opacity: 0.5;
+}
 </style>
 </head>
 
@@ -459,6 +428,9 @@ video::-webkit-media-controls-fullscreen-button {
 
 <div class="control-hint">← → or click to navigate</div>
 <div class="video-audio-indicator" id="videoAudioIndicator">🎵 Audio On</div>
+
+<!-- Loading Indicator -->
+<div class="loading-indicator" id="loadingIndicator">⌛ Loading...</div>
 
 <!-- ===== PAGE 1: LOGIN ===== -->
 <section class="section active" id="login">
@@ -483,7 +455,8 @@ video::-webkit-media-controls-fullscreen-button {
 <!-- ===== PAGE 2: FIRST IMAGE ===== -->
 <section class="section media-page" id="page2">
   <img src="image1.jpg" class="media-content" alt="Memory 1"
-       onerror="handleMediaError(this, 'fallback2')">
+       onerror="handleMediaError(this, 'fallback2')"
+       loading="lazy">
   <div id="fallback2" class="media-fallback" style="display:none;">
     🎉 Image 1
   </div>
@@ -491,7 +464,7 @@ video::-webkit-media-controls-fullscreen-button {
 
 <!-- ===== PAGE 3: FIRST VIDEO (MUTED) ===== -->
 <section class="section media-page video-page" id="page3">
-  <video id="birthdayVideo" class="media-content" muted playsinline loop
+  <video id="birthdayVideo" class="media-content" muted playsinline loop preload="metadata"
          onerror="handleVideoError('fallback3')">
     <source src="video.mp4" type="video/mp4">
   </video>
@@ -503,7 +476,8 @@ video::-webkit-media-controls-fullscreen-button {
 <!-- ===== PAGE 4: SECOND IMAGE ===== -->
 <section class="section media-page" id="page4">
   <img src="image2.jpg" class="media-content" alt="Memory 2"
-       onerror="handleMediaError(this, 'fallback4')">
+       onerror="handleMediaError(this, 'fallback4')"
+       loading="lazy">
   <div id="fallback4" class="media-fallback" style="display:none;">
     ✨ Image 2
   </div>
@@ -512,7 +486,8 @@ video::-webkit-media-controls-fullscreen-button {
 <!-- ===== PAGE 5: THIRD IMAGE ===== -->
 <section class="section media-page" id="page5">
   <img src="image3.jpg" class="media-content" alt="Memory 3"
-       onerror="handleMediaError(this, 'fallback5')">
+       onerror="handleMediaError(this, 'fallback5')"
+       loading="lazy">
   <div id="fallback5" class="media-fallback" style="display:none;">
     🎊 Image 3
   </div>
@@ -521,7 +496,8 @@ video::-webkit-media-controls-fullscreen-button {
 <!-- ===== PAGE 6: FOURTH IMAGE ===== -->
 <section class="section media-page" id="page6">
   <img src="image4.jpg" class="media-content" alt="Final"
-       onerror="handleMediaError(this, 'fallback6')">
+       onerror="handleMediaError(this, 'fallback6')"
+       loading="lazy">
   <div id="fallback6" class="media-fallback" style="display:none;">
     💫 Image 4
   </div>
@@ -529,7 +505,7 @@ video::-webkit-media-controls-fullscreen-button {
 
 <!-- ===== PAGE 7: FINAL VIDEO WITH AUDIO ===== -->
 <section class="section media-page video-page" id="page7">
-  <video id="finalVideo" class="media-content" playsinline
+  <video id="finalVideo" class="media-content" playsinline preload="metadata"
          onerror="handleFinalVideoError('fallback7')">
     <source src="final_video.mp4" type="video/mp4">
   </video>
@@ -566,16 +542,13 @@ video::-webkit-media-controls-fullscreen-button {
   </div>
 </section>
 
-<!-- Hidden Audio Elements -->
-<audio id="backgroundMusic" loop preload="auto">
+<!-- Audio Elements -->
+<audio id="backgroundMusic" loop preload="metadata">
   <source src="moon.mp3" type="audio/mpeg">
 </audio>
 
-<!-- Voice Note Audio -->
-<audio id="voiceNoteAudio" preload="auto">
+<audio id="voiceNoteAudio" preload="metadata">
   <source src="voice_note.mp3" type="audio/mpeg">
-  <source src="voice_note.ogg" type="audio/ogg">
-  <source src="voice_note.wav" type="audio/wav">
 </audio>
 
 <script>
@@ -584,6 +557,7 @@ const PASSWORD = "01022026";
 const PAGES = ["login", "page2", "page3", "page4", "page5", "page6", "page7", "page8"];
 let currentPageIndex = 0;
 let bgMusicPlaying = false;
+let isSwitchingPage = false;
 
 // ===== ELEMENTS =====
 const bgMusic = document.getElementById('backgroundMusic');
@@ -596,6 +570,7 @@ const navDots = document.getElementById('navDots');
 const videoAudioIndicator = document.getElementById('videoAudioIndicator');
 const finalVideo = document.getElementById('finalVideo');
 const firstVideo = document.getElementById('birthdayVideo');
+const loadingIndicator = document.getElementById('loadingIndicator');
 
 // Voice note elements
 const voicePlayBtn = document.getElementById('voicePlayBtn');
@@ -603,106 +578,174 @@ const voiceProgress = document.getElementById('voiceProgress');
 const currentTimeDisplay = document.getElementById('currentTime');
 const durationDisplay = document.getElementById('duration');
 
-// ===== VIDEO STATE MANAGEMENT =====
+// ===== STATE MANAGEMENT =====
 let finalVideoPlaying = false;
 let voiceNotePlaying = false;
 
-// ===== INITIALIZE NAV DOTS =====
-function createNavDots() {
-  navDots.innerHTML = '';
-  for (let i = 1; i < PAGES.length; i++) {
-    const dot = document.createElement('div');
-    dot.className = 'nav-dot';
-    dot.dataset.index = i;
-    dot.addEventListener('click', () => goToPage(i));
-    navDots.appendChild(dot);
+// ===== SIMPLE BGM MANAGEMENT =====
+function manageBGM(pageIndex) {
+  // Stop BGM only on video/voice note pages, not on image pages
+  if (pageIndex === 6 || pageIndex === 7) { // Final video or voice note
+    if (bgMusicPlaying) {
+      bgMusic.pause();
+      bgMusicPlaying = false;
+      console.log('BGM stopped for video/voice note');
+    }
+  } 
+  // Start BGM on image pages (2-6) if not playing
+  else if (pageIndex >= 2 && pageIndex <= 6 && !bgMusicPlaying) {
+    playBGM();
   }
 }
 
-// ===== PAGE NAVIGATION =====
+function playBGM() {
+  if (bgMusicPlaying) return;
+  
+  bgMusic.volume = 0.3;
+  bgMusic.play()
+    .then(() => {
+      bgMusicPlaying = true;
+      console.log('BGM started');
+    })
+    .catch(e => {
+      console.log('BGM play error:', e);
+      // Try once more
+      setTimeout(() => {
+        if (!bgMusicPlaying) {
+          bgMusic.play().then(() => {
+            bgMusicPlaying = true;
+          }).catch(console.log);
+        }
+      }, 500);
+    });
+}
+
+// ===== SIMPLE PAGE NAVIGATION =====
 function showPage(pageId) {
-  // Get previous page info
-  const previousPageId = PAGES[currentPageIndex];
-  const previousPageIndex = currentPageIndex;
+  if (isSwitchingPage) return;
   
-  // Stop media from previous page before switching
-  stopPreviousPageMedia(previousPageId);
+  isSwitchingPage = true;
+  loadingIndicator.classList.add('show');
   
-  // Hide all pages
-  PAGES.forEach(page => document.getElementById(page).classList.remove('active'));
+  const targetIndex = PAGES.indexOf(pageId);
+  const previousIndex = currentPageIndex;
   
-  // Show requested page
-  const pageEl = document.getElementById(pageId);
-  if (pageEl) {
-    pageEl.classList.add('active');
-    currentPageIndex = PAGES.indexOf(pageId);
+  // Stop previous page media
+  stopPageMedia(PAGES[previousIndex]);
+  
+  // Update page
+  setTimeout(() => {
+    PAGES.forEach(page => document.getElementById(page).classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+    currentPageIndex = targetIndex;
     
-    // Handle music based on page changes
-    handleMusicTransition(previousPageIndex, currentPageIndex);
-    
-    // Update UI elements
+    // Update UI
     updateProgress();
     updatePageCounter();
     updateNavDots();
     updateHomeButton();
     
-    // Handle new page media
-    startCurrentPageMedia(pageId);
+    // Manage BGM based on page
+    manageBGM(targetIndex);
+    
+    // Start current page media
+    startPageMedia(pageId);
+    
+    // Hide loading
+    setTimeout(() => {
+      loadingIndicator.classList.remove('show');
+      isSwitchingPage = false;
+    }, 300);
+  }, 300);
+}
+
+function stopPageMedia(pageId) {
+  switch(pageId) {
+    case 'page3':
+      if (firstVideo) {
+        firstVideo.pause();
+        firstVideo.currentTime = 0;
+      }
+      break;
+    case 'page7':
+      if (finalVideo) {
+        finalVideo.pause();
+        finalVideo.currentTime = 0;
+        finalVideoPlaying = false;
+        videoAudioIndicator.style.display = 'none';
+      }
+      break;
+    case 'page8':
+      if (voiceNoteAudio) {
+        voiceNoteAudio.pause();
+        voiceNotePlaying = false;
+        voicePlayBtn.classList.remove('playing');
+      }
+      break;
   }
 }
 
-function stopPreviousPageMedia(pageId) {
-  if (pageId === 'page3' && firstVideo) {
-    // Stop first video
-    firstVideo.pause();
-    firstVideo.currentTime = 0;
-  } else if (pageId === 'page7' && finalVideo) {
-    // Stop final video
-    finalVideo.pause();
-    finalVideo.currentTime = 0;
-    finalVideoPlaying = false;
-    videoAudioIndicator.style.display = 'none';
-  } else if (pageId === 'page8' && voiceNoteAudio) {
-    // Stop voice note
-    voiceNoteAudio.pause();
-    voiceNotePlaying = false;
-    voicePlayBtn.classList.remove('playing');
+function startPageMedia(pageId) {
+  switch(pageId) {
+    case 'page3':
+      if (firstVideo) {
+        firstVideo.muted = true;
+        firstVideo.play().catch(e => console.log('First video error:', e));
+      }
+      break;
+    case 'page7':
+      startFinalVideo();
+      break;
+    case 'page8':
+      setupVoiceNotePage();
+      break;
   }
 }
 
-function startCurrentPageMedia(pageId) {
-  if (pageId === 'page3' && firstVideo) {
-    // Start first video (muted)
-    firstVideo.muted = true;
-    firstVideo.play().catch(console.log);
-    videoAudioIndicator.style.display = 'none';
-  } else if (pageId === 'page7' && finalVideo) {
-    // Start final video with audio
-    startFinalVideo();
-  } else if (pageId === 'page8' && voiceNoteAudio) {
-    // Setup voice note page
-    setupVoiceNotePage();
-  }
+function startFinalVideo() {
+  if (!finalVideo) return;
+  
+  finalVideo.muted = false;
+  finalVideo.volume = 1.0;
+  finalVideo.loop = true;
+  
+  finalVideo.play()
+    .then(() => {
+      finalVideoPlaying = true;
+      videoAudioIndicator.style.display = 'block';
+      videoAudioIndicator.style.opacity = '0.4';
+    })
+    .catch(e => {
+      console.log('Final video autoplay failed:', e);
+      // Mute and try again
+      finalVideo.muted = true;
+      finalVideo.play().then(() => {
+        finalVideoPlaying = true;
+        videoAudioIndicator.style.display = 'block';
+        videoAudioIndicator.style.opacity = '0.2';
+        // Try to unmute after 1 second
+        setTimeout(() => {
+          if (finalVideoPlaying) {
+            finalVideo.muted = false;
+            videoAudioIndicator.style.opacity = '0.4';
+          }
+        }, 1000);
+      }).catch(console.log);
+    });
 }
 
+// ===== VOICE NOTE FUNCTIONS =====
 function setupVoiceNotePage() {
-  // Update duration display
-  if (voiceNoteAudio.duration) {
+  if (!voiceNoteAudio) return;
+  
+  if (voiceNoteAudio.readyState >= 1) {
     updateVoiceNoteDuration();
   } else {
     voiceNoteAudio.addEventListener('loadedmetadata', updateVoiceNoteDuration);
   }
   
-  // Set up progress update
   voiceNoteAudio.addEventListener('timeupdate', updateVoiceNoteProgress);
-  
-  // Handle audio end
-  voiceNoteAudio.addEventListener('ended', () => {
-    voiceNotePlaying = false;
-    voicePlayBtn.classList.remove('playing');
-    voiceProgress.style.width = '0%';
-    currentTimeDisplay.textContent = '0:00';
-  });
+  voiceNoteAudio.addEventListener('ended', onVoiceNoteEnded);
 }
 
 function updateVoiceNoteDuration() {
@@ -721,10 +764,11 @@ function updateVoiceNoteProgress() {
   currentTimeDisplay.textContent = formatTime(current);
 }
 
-function formatTime(seconds) {
-  const mins = Math.floor(seconds / 60);
-  const secs = Math.floor(seconds % 60);
-  return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+function onVoiceNoteEnded() {
+  voiceNotePlaying = false;
+  voicePlayBtn.classList.remove('playing');
+  voiceProgress.style.width = '0%';
+  currentTimeDisplay.textContent = '0:00';
 }
 
 function toggleVoiceNote() {
@@ -735,148 +779,30 @@ function toggleVoiceNote() {
     voiceNotePlaying = false;
     voicePlayBtn.classList.remove('playing');
   } else {
-    // Stop background music and videos if playing
-    if (bgMusicPlaying) {
-      bgMusic.pause();
-      bgMusicPlaying = false;
-    }
-    
-    if (finalVideoPlaying && finalVideo) {
-      finalVideo.pause();
-      finalVideoPlaying = false;
-    }
-    
     voiceNoteAudio.play()
       .then(() => {
         voiceNotePlaying = true;
         voicePlayBtn.classList.add('playing');
       })
       .catch(e => {
-        console.log('Voice note playback failed:', e);
-        alert('Unable to play voice note. Please make sure the audio file exists.');
+        console.log('Voice note play failed:', e);
+        // Show user-friendly error
+        const note = document.querySelector('.voice-note-note');
+        if (note) {
+          note.textContent = 'Unable to play voice note. Please make sure voice_note.mp3 exists.';
+          note.style.color = '#ff6b6b';
+        }
       });
   }
 }
 
-function startFinalVideo() {
-  if (!finalVideo) return;
-  
-  // Stop BGM and voice note
-  if (bgMusicPlaying) {
-    bgMusic.pause();
-    bgMusicPlaying = false;
-  }
-  
-  if (voiceNotePlaying && voiceNoteAudio) {
-    voiceNoteAudio.pause();
-    voiceNotePlaying = false;
-    voicePlayBtn.classList.remove('playing');
-  }
-  
-  // Configure and play final video
-  finalVideo.muted = false;
-  finalVideo.volume = 1.0;
-  finalVideo.loop = true;
-  
-  const playPromise = finalVideo.play();
-  
-  if (playPromise !== undefined) {
-    playPromise.then(() => {
-      console.log('Final video playing with audio');
-      finalVideoPlaying = true;
-      videoAudioIndicator.style.display = 'block';
-      videoAudioIndicator.style.opacity = '0.4';
-    }).catch(error => {
-      console.log('Autoplay with audio failed:', error);
-      // Fallback: mute and play, then try to unmute
-      finalVideo.muted = true;
-      finalVideo.play().then(() => {
-        finalVideoPlaying = true;
-        videoAudioIndicator.style.display = 'block';
-        videoAudioIndicator.style.opacity = '0.2';
-        // Try to unmute after playing
-        setTimeout(() => {
-          if (finalVideoPlaying) {
-            finalVideo.muted = false;
-            videoAudioIndicator.style.opacity = '0.4';
-          }
-        }, 1000);
-      });
-    });
-  }
+function formatTime(seconds) {
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
 }
 
-function handleMusicTransition(oldIndex, newIndex) {
-  // If going to final video page (page7)
-  if (newIndex === 6) {
-    if (bgMusicPlaying) {
-      bgMusic.pause();
-      bgMusicPlaying = false;
-    }
-    // Also stop voice note if playing
-    if (voiceNotePlaying && voiceNoteAudio) {
-      voiceNoteAudio.pause();
-      voiceNotePlaying = false;
-      voicePlayBtn.classList.remove('playing');
-    }
-  }
-  // If going to voice note page (page8)
-  else if (newIndex === 7) {
-    // Stop final video if playing
-    if (finalVideoPlaying && finalVideo) {
-      finalVideo.pause();
-      finalVideo.currentTime = 0;
-      finalVideoPlaying = false;
-      videoAudioIndicator.style.display = 'none';
-    }
-    // Stop BGM if playing
-    if (bgMusicPlaying) {
-      bgMusic.pause();
-      bgMusicPlaying = false;
-    }
-  }
-  // If leaving final video page
-  else if (oldIndex === 6) {
-    // Ensure final video is stopped
-    if (finalVideo && finalVideoPlaying) {
-      finalVideo.pause();
-      finalVideo.currentTime = 0;
-      finalVideoPlaying = false;
-      videoAudioIndicator.style.display = 'none';
-    }
-    
-    // Resume BGM if going to a content page (not login or voice note)
-    if (newIndex > 0 && newIndex < 6 && !bgMusicPlaying) {
-      bgMusic.play().then(() => {
-        bgMusicPlaying = true;
-      }).catch(console.log);
-    }
-  }
-  // If leaving voice note page
-  else if (oldIndex === 7) {
-    // Stop voice note if playing
-    if (voiceNotePlaying && voiceNoteAudio) {
-      voiceNoteAudio.pause();
-      voiceNotePlaying = false;
-      voicePlayBtn.classList.remove('playing');
-    }
-    
-    // Resume BGM if going to a content page (not login)
-    if (newIndex > 0 && newIndex < 6 && !bgMusicPlaying) {
-      bgMusic.play().then(() => {
-        bgMusicPlaying = true;
-      }).catch(console.log);
-    }
-  }
-  // If moving between regular content pages
-  else if (newIndex > 0 && newIndex < 6 && !bgMusicPlaying) {
-    // Resume BGM if it's not playing
-    bgMusic.play().then(() => {
-      bgMusicPlaying = true;
-    }).catch(console.log);
-  }
-}
-
+// ===== NAVIGATION FUNCTIONS =====
 function goToPage(index) {
   if (index >= 0 && index < PAGES.length) {
     showPage(PAGES[index]);
@@ -897,7 +823,7 @@ function prevPage() {
   }
 }
 
-// ===== PROGRESS FUNCTIONS =====
+// ===== UI UPDATE FUNCTIONS =====
 function updateProgress() {
   const totalPages = PAGES.length - 1;
   const progress = Math.max(0, currentPageIndex - 1);
@@ -905,7 +831,6 @@ function updateProgress() {
   
   progressBar.style.width = percentage + '%';
   
-  // Show/hide progress bar
   if (currentPageIndex > 0) {
     progressContainer.classList.add('show');
   } else {
@@ -941,6 +866,17 @@ function updateHomeButton() {
   }
 }
 
+function createNavDots() {
+  navDots.innerHTML = '';
+  for (let i = 1; i < PAGES.length; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'nav-dot';
+    dot.dataset.index = i;
+    dot.addEventListener('click', () => goToPage(i));
+    navDots.appendChild(dot);
+  }
+}
+
 // ===== UNLOCK FUNCTION =====
 function unlock() {
   const input = document.getElementById("password");
@@ -949,15 +885,8 @@ function unlock() {
   if (input.value.trim() === PASSWORD) {
     error.classList.remove('show');
     
-    // Start music
-    bgMusic.volume = 0.3;
-    bgMusic.play()
-      .then(() => {
-        bgMusicPlaying = true;
-      })
-      .catch(e => console.log('Music error:', e));
-    
-    // Go to first media page
+    // Start BGM and go to first page
+    playBGM();
     showPage('page2');
   } else {
     error.textContent = "Try 01022026";
@@ -965,7 +894,7 @@ function unlock() {
     input.value = '';
     input.focus();
     
-    // Simple shake effect
+    // Shake effect
     input.style.transform = 'translateX(5px)';
     setTimeout(() => input.style.transform = 'translateX(-5px)', 50);
     setTimeout(() => input.style.transform = '', 100);
@@ -993,7 +922,7 @@ function handleFinalVideoError(fallbackId) {
   videoAudioIndicator.style.display = 'none';
 }
 
-// ===== EVENT LISTENERS =====
+// ===== INITIALIZATION =====
 document.addEventListener('DOMContentLoaded', () => {
   // Initialize UI
   createNavDots();
@@ -1004,9 +933,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Enter') unlock();
   });
   
-  // Click to advance (full screen) - disable for voice note page
+  // Click to advance
   document.addEventListener('click', (e) => {
-    // Don't trigger on buttons, inputs, or dots
     if (e.target.tagName === 'BUTTON' || 
         e.target.tagName === 'INPUT' ||
         e.target.closest('.nav-dots') ||
@@ -1017,8 +945,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     
-    if (currentPageIndex === 0) return; // Don't advance from login
-    
+    if (currentPageIndex === 0) return;
     if (currentPageIndex < PAGES.length - 1) {
       nextPage();
     }
@@ -1044,7 +971,6 @@ document.addEventListener('DOMContentLoaded', () => {
         goToPage(0);
         e.preventDefault();
         break;
-      // Space bar also toggles voice note playback on voice note page
       case ' ':
         if (currentPageIndex === 7) {
           toggleVoiceNote();
@@ -1054,7 +980,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
   
-  // Swipe gestures for mobile
+  // Swipe gestures
   let startX = 0;
   document.addEventListener('touchstart', (e) => {
     startX = e.touches[0].clientX;
@@ -1073,69 +999,50 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, { passive: true });
   
-  // First video loop
+  // Video loops
   if (firstVideo) {
     firstVideo.addEventListener('ended', () => {
-      if (currentPageIndex === 2) { // Only loop if still on page3
+      if (currentPageIndex === 2) {
         firstVideo.currentTime = 0;
         firstVideo.play();
       }
     });
   }
   
-  // Final video loop
   if (finalVideo) {
     finalVideo.addEventListener('ended', () => {
-      if (currentPageIndex === 6) { // Only loop if still on page7
+      if (currentPageIndex === 6) {
         finalVideo.currentTime = 0;
         finalVideo.play();
       }
     });
   }
   
-  // Voice note loaded
-  if (voiceNoteAudio) {
-    voiceNoteAudio.addEventListener('loadeddata', () => {
-      console.log('Voice note loaded');
-    });
-    
-    voiceNoteAudio.addEventListener('error', (e) => {
-      console.log('Voice note error:', e);
-      alert('Voice note file not found. Please make sure voice_note.mp3 exists in the same folder.');
-    });
-  }
-  
-  // Page visibility change
+  // Page visibility
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
       // Pause everything when tab is hidden
-      if (bgMusicPlaying) {
-        bgMusic.pause();
-      }
-      if (finalVideoPlaying && finalVideo) {
-        finalVideo.pause();
-      }
-      if (firstVideo && currentPageIndex === 2) {
-        firstVideo.pause();
-      }
-      if (voiceNotePlaying && voiceNoteAudio) {
-        voiceNoteAudio.pause();
-      }
+      if (bgMusicPlaying) bgMusic.pause();
+      if (finalVideoPlaying && finalVideo) finalVideo.pause();
+      if (firstVideo && currentPageIndex === 2) firstVideo.pause();
+      if (voiceNotePlaying && voiceNoteAudio) voiceNoteAudio.pause();
     } else {
-      // Resume when tab becomes visible
-      if (currentPageIndex === 6 && finalVideoPlaying && finalVideo) {
-        finalVideo.play().catch(console.log);
-      } else if (currentPageIndex === 2 && firstVideo) {
-        firstVideo.play().catch(console.log);
-      } else if (currentPageIndex === 7 && voiceNotePlaying && voiceNoteAudio) {
-        voiceNoteAudio.play().catch(console.log);
-      } else if (currentPageIndex > 0 && currentPageIndex < 6 && bgMusicPlaying) {
-        bgMusic.play().catch(console.log);
-      }
+      // Resume when visible
+      setTimeout(() => {
+        if (currentPageIndex === 6 && finalVideoPlaying && finalVideo) {
+          finalVideo.play().catch(console.log);
+        } else if (currentPageIndex === 2 && firstVideo) {
+          firstVideo.play().catch(console.log);
+        } else if (currentPageIndex === 7 && voiceNotePlaying && voiceNoteAudio) {
+          voiceNoteAudio.play().catch(console.log);
+        } else if (currentPageIndex >= 2 && currentPageIndex <= 6 && bgMusicPlaying) {
+          bgMusic.play().catch(console.log);
+        }
+      }, 300);
     }
   });
   
-  // Auto-focus password on login
+  // Auto-focus password
   document.getElementById('password').focus();
 });
 </script>
