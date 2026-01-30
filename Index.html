@@ -16,34 +16,30 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: #000;
   color: white;
-  overflow: hidden;
   height: 100vh;
   width: 100vw;
+  overflow: hidden;
 }
 
-/* ===== MINIMAL TRANSITIONS ===== */
-.section {
+/* Simple page system - no transitions that cause delays */
+.page {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.5s ease;
+  display: none;
   z-index: 1;
 }
 
-.section.active {
-  opacity: 1;
-  visibility: visible;
+.page.active {
+  display: flex;
   z-index: 2;
 }
 
 /* ===== LOGIN PAGE ===== */
 #login {
   background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-  display: flex;
   justify-content: center;
   align-items: center;
 }
@@ -108,14 +104,11 @@ body {
   opacity: 1;
 }
 
-/* ===== FULL-SCREEN MEDIA PAGES ===== */
+/* ===== MEDIA PAGES ===== */
 .media-page {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
+  background: #000;
   justify-content: center;
   align-items: center;
-  background: #000;
 }
 
 .media-content {
@@ -123,20 +116,24 @@ body {
   max-height: 100vh;
   width: auto;
   height: auto;
-  object-fit: contain;
+  display: block;
 }
 
-/* ===== VIDEO PAGE SPECIAL ===== */
+/* ===== VIDEO PAGES ===== */
 .video-page .media-content {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
+/* Hide video controls */
+video::-webkit-media-controls {
+  display: none !important;
+}
+
 /* ===== VOICE NOTE PAGE ===== */
 #page8 {
   background: linear-gradient(135deg, #1a1a2e, #16213e);
-  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -265,12 +262,7 @@ body {
   max-width: 400px;
 }
 
-/* Hide video controls */
-video::-webkit-media-controls {
-  display: none !important;
-}
-
-/* ===== MINIMAL PROGRESS INDICATOR ===== */
+/* ===== SIMPLE PROGRESS BAR ===== */
 .progress-container {
   position: fixed;
   top: 0;
@@ -280,7 +272,6 @@ video::-webkit-media-controls {
   background: rgba(255, 255, 255, 0.1);
   z-index: 1000;
   opacity: 0;
-  transition: opacity 0.3s ease;
 }
 
 .progress-container.show {
@@ -291,7 +282,6 @@ video::-webkit-media-controls {
   height: 100%;
   background: linear-gradient(90deg, #f093fb, #f5576c);
   width: 0%;
-  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ===== PAGE COUNTER ===== */
@@ -302,10 +292,9 @@ video::-webkit-media-controls {
   font-size: 0.8rem;
   opacity: 0.4;
   z-index: 1001;
-  transition: opacity 0.3s;
 }
 
-/* ===== NAVIGATION CONTROLS ===== */
+/* ===== NAVIGATION DOTS ===== */
 .nav-dots {
   position: fixed;
   bottom: 20px;
@@ -330,7 +319,7 @@ video::-webkit-media-controls {
   transform: scale(1.2);
 }
 
-/* ===== SIMPLE CONTROLS ===== */
+/* ===== CONTROLS ===== */
 .control-hint {
   position: fixed;
   bottom: 20px;
@@ -366,7 +355,7 @@ video::-webkit-media-controls {
   opacity: 0.8;
 }
 
-/* ===== FINAL VIDEO INDICATOR ===== */
+/* ===== VIDEO INDICATOR ===== */
 .video-audio-indicator {
   position: fixed;
   bottom: 50px;
@@ -381,7 +370,7 @@ video::-webkit-media-controls {
   pointer-events: none;
 }
 
-/* ===== FALLBACK STYLING ===== */
+/* ===== FALLBACK ===== */
 .media-fallback {
   position: absolute;
   top: 50%;
@@ -391,29 +380,12 @@ video::-webkit-media-controls {
   opacity: 0.5;
   font-size: 0.9rem;
 }
-
-/* ===== LOADING INDICATOR ===== */
-.loading-indicator {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 1.5rem;
-  opacity: 0;
-  transition: opacity 0.3s;
-  pointer-events: none;
-  z-index: 2000;
-}
-
-.loading-indicator.show {
-  opacity: 0.5;
-}
 </style>
 </head>
 
 <body>
 
-<!-- ===== PROGRESS INDICATOR ===== -->
+<!-- Progress Bar -->
 <div class="progress-container" id="progressContainer">
   <div class="progress-bar" id="progressBar"></div>
 </div>
@@ -429,11 +401,8 @@ video::-webkit-media-controls {
 <div class="control-hint">← → or click to navigate</div>
 <div class="video-audio-indicator" id="videoAudioIndicator">🎵 Audio On</div>
 
-<!-- Loading Indicator -->
-<div class="loading-indicator" id="loadingIndicator">⌛ Loading...</div>
-
 <!-- ===== PAGE 1: LOGIN ===== -->
-<section class="section active" id="login">
+<section class="page active" id="login">
   <div class="login-container">
     <div class="logo">🎂</div>
     <h1 class="login-title">Birthday Surprise</h1>
@@ -453,18 +422,18 @@ video::-webkit-media-controls {
 </section>
 
 <!-- ===== PAGE 2: FIRST IMAGE ===== -->
-<section class="section media-page" id="page2">
+<section class="page media-page" id="page2">
   <img src="image1.jpg" class="media-content" alt="Memory 1"
        onerror="handleMediaError(this, 'fallback2')"
-       loading="lazy">
+       loading="eager">
   <div id="fallback2" class="media-fallback" style="display:none;">
     🎉 Image 1
   </div>
 </section>
 
-<!-- ===== PAGE 3: FIRST VIDEO (MUTED) ===== -->
-<section class="section media-page video-page" id="page3">
-  <video id="birthdayVideo" class="media-content" muted playsinline loop preload="metadata"
+<!-- ===== PAGE 3: FIRST VIDEO ===== -->
+<section class="page media-page video-page" id="page3">
+  <video id="birthdayVideo" class="media-content" muted playsinline loop
          onerror="handleVideoError('fallback3')">
     <source src="video.mp4" type="video/mp4">
   </video>
@@ -474,38 +443,38 @@ video::-webkit-media-controls {
 </section>
 
 <!-- ===== PAGE 4: SECOND IMAGE ===== -->
-<section class="section media-page" id="page4">
+<section class="page media-page" id="page4">
   <img src="image2.jpg" class="media-content" alt="Memory 2"
        onerror="handleMediaError(this, 'fallback4')"
-       loading="lazy">
+       loading="eager">
   <div id="fallback4" class="media-fallback" style="display:none;">
     ✨ Image 2
   </div>
 </section>
 
 <!-- ===== PAGE 5: THIRD IMAGE ===== -->
-<section class="section media-page" id="page5">
+<section class="page media-page" id="page5">
   <img src="image3.jpg" class="media-content" alt="Memory 3"
        onerror="handleMediaError(this, 'fallback5')"
-       loading="lazy">
+       loading="eager">
   <div id="fallback5" class="media-fallback" style="display:none;">
     🎊 Image 3
   </div>
 </section>
 
 <!-- ===== PAGE 6: FOURTH IMAGE ===== -->
-<section class="section media-page" id="page6">
+<section class="page media-page" id="page6">
   <img src="image4.jpg" class="media-content" alt="Final"
        onerror="handleMediaError(this, 'fallback6')"
-       loading="lazy">
+       loading="eager">
   <div id="fallback6" class="media-fallback" style="display:none;">
     💫 Image 4
   </div>
 </section>
 
-<!-- ===== PAGE 7: FINAL VIDEO WITH AUDIO ===== -->
-<section class="section media-page video-page" id="page7">
-  <video id="finalVideo" class="media-content" playsinline preload="metadata"
+<!-- ===== PAGE 7: FINAL VIDEO ===== -->
+<section class="page media-page video-page" id="page7">
+  <video id="finalVideo" class="media-content" playsinline
          onerror="handleFinalVideoError('fallback7')">
     <source src="final_video.mp4" type="video/mp4">
   </video>
@@ -515,7 +484,7 @@ video::-webkit-media-controls {
 </section>
 
 <!-- ===== PAGE 8: VOICE NOTE ===== -->
-<section class="section" id="page8">
+<section class="page" id="page8">
   <div class="voice-note-container">
     <div class="voice-note-icon">🎙️</div>
     <h2 class="voice-note-title">A Special Message</h2>
@@ -543,21 +512,19 @@ video::-webkit-media-controls {
 </section>
 
 <!-- Audio Elements -->
-<audio id="backgroundMusic" loop preload="metadata">
+<audio id="backgroundMusic" loop>
   <source src="moon.mp3" type="audio/mpeg">
 </audio>
 
-<audio id="voiceNoteAudio" preload="metadata">
+<audio id="voiceNoteAudio">
   <source src="voice_note.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-// ===== CONFIG =====
-const PASSWORD = "01022026";
+// ===== SIMPLE STATE =====
 const PAGES = ["login", "page2", "page3", "page4", "page5", "page6", "page7", "page8"];
-let currentPageIndex = 0;
-let bgMusicPlaying = false;
-let isSwitchingPage = false;
+let currentPage = 0;
+let bgMusicStarted = false;
 
 // ===== ELEMENTS =====
 const bgMusic = document.getElementById('backgroundMusic');
@@ -568,231 +535,159 @@ const pageCounter = document.getElementById('pageCounter');
 const homeBtn = document.getElementById('homeBtn');
 const navDots = document.getElementById('navDots');
 const videoAudioIndicator = document.getElementById('videoAudioIndicator');
-const finalVideo = document.getElementById('finalVideo');
-const firstVideo = document.getElementById('birthdayVideo');
-const loadingIndicator = document.getElementById('loadingIndicator');
 
-// Voice note elements
-const voicePlayBtn = document.getElementById('voicePlayBtn');
-const voiceProgress = document.getElementById('voiceProgress');
-const currentTimeDisplay = document.getElementById('currentTime');
-const durationDisplay = document.getElementById('duration');
+// ===== SIMPLE PAGE MANAGEMENT =====
+function showPage(index) {
+  if (index < 0 || index >= PAGES.length) return;
+  
+  // Hide all pages
+  PAGES.forEach(page => {
+    document.getElementById(page).classList.remove('active');
+  });
+  
+  // Stop media from current page
+  stopCurrentMedia();
+  
+  // Show new page
+  currentPage = index;
+  document.getElementById(PAGES[index]).classList.add('active');
+  
+  // Update UI
+  updateUI();
+  
+  // Start media for new page
+  startPageMedia(index);
+}
 
-// ===== STATE MANAGEMENT =====
-let finalVideoPlaying = false;
-let voiceNotePlaying = false;
-
-// ===== SIMPLE BGM MANAGEMENT =====
-function manageBGM(pageIndex) {
-  // Stop BGM only on video/voice note pages, not on image pages
-  if (pageIndex === 6 || pageIndex === 7) { // Final video or voice note
-    if (bgMusicPlaying) {
-      bgMusic.pause();
-      bgMusicPlaying = false;
-      console.log('BGM stopped for video/voice note');
+function stopCurrentMedia() {
+  const currentPageId = PAGES[currentPage];
+  
+  if (currentPageId === 'page3') {
+    const video = document.getElementById('birthdayVideo');
+    if (video) video.pause();
+  } else if (currentPageId === 'page7') {
+    const video = document.getElementById('finalVideo');
+    if (video) video.pause();
+    videoAudioIndicator.style.display = 'none';
+  } else if (currentPageId === 'page8') {
+    if (voiceNoteAudio) {
+      voiceNoteAudio.pause();
+      document.getElementById('voicePlayBtn').classList.remove('playing');
     }
-  } 
-  // Start BGM on image pages (2-6) if not playing
-  else if (pageIndex >= 2 && pageIndex <= 6 && !bgMusicPlaying) {
-    playBGM();
   }
 }
 
-function playBGM() {
-  if (bgMusicPlaying) return;
+function startPageMedia(index) {
+  const pageId = PAGES[index];
   
-  bgMusic.volume = 0.3;
-  bgMusic.play()
-    .then(() => {
-      bgMusicPlaying = true;
-      console.log('BGM started');
-    })
-    .catch(e => {
-      console.log('BGM play error:', e);
-      // Try once more
-      setTimeout(() => {
-        if (!bgMusicPlaying) {
-          bgMusic.play().then(() => {
-            bgMusicPlaying = true;
-          }).catch(console.log);
-        }
-      }, 500);
-    });
-}
-
-// ===== SIMPLE PAGE NAVIGATION =====
-function showPage(pageId) {
-  if (isSwitchingPage) return;
-  
-  isSwitchingPage = true;
-  loadingIndicator.classList.add('show');
-  
-  const targetIndex = PAGES.indexOf(pageId);
-  const previousIndex = currentPageIndex;
-  
-  // Stop previous page media
-  stopPageMedia(PAGES[previousIndex]);
-  
-  // Update page
-  setTimeout(() => {
-    PAGES.forEach(page => document.getElementById(page).classList.remove('active'));
-    document.getElementById(pageId).classList.add('active');
-    currentPageIndex = targetIndex;
-    
-    // Update UI
-    updateProgress();
-    updatePageCounter();
-    updateNavDots();
-    updateHomeButton();
-    
-    // Manage BGM based on page
-    manageBGM(targetIndex);
-    
-    // Start current page media
-    startPageMedia(pageId);
-    
-    // Hide loading
-    setTimeout(() => {
-      loadingIndicator.classList.remove('show');
-      isSwitchingPage = false;
-    }, 300);
-  }, 300);
-}
-
-function stopPageMedia(pageId) {
-  switch(pageId) {
-    case 'page3':
-      if (firstVideo) {
-        firstVideo.pause();
-        firstVideo.currentTime = 0;
-      }
-      break;
-    case 'page7':
-      if (finalVideo) {
-        finalVideo.pause();
-        finalVideo.currentTime = 0;
-        finalVideoPlaying = false;
-        videoAudioIndicator.style.display = 'none';
-      }
-      break;
-    case 'page8':
-      if (voiceNoteAudio) {
-        voiceNoteAudio.pause();
-        voiceNotePlaying = false;
-        voicePlayBtn.classList.remove('playing');
-      }
-      break;
+  // Manage BGM
+  if (index >= 2 && index <= 6) {
+    // Pages 2-6: Play BGM
+    if (!bgMusicStarted) {
+      bgMusic.volume = 0.3;
+      bgMusic.play().catch(e => console.log('BGM error:', e));
+      bgMusicStarted = true;
+    } else {
+      bgMusic.play().catch(e => console.log('BGM resume error:', e));
+    }
+  } else if (index === 7 || index === 0) {
+    // Page 7 (video) or login: Pause BGM
+    bgMusic.pause();
   }
-}
-
-function startPageMedia(pageId) {
-  switch(pageId) {
-    case 'page3':
-      if (firstVideo) {
-        firstVideo.muted = true;
-        firstVideo.play().catch(e => console.log('First video error:', e));
-      }
-      break;
-    case 'page7':
-      startFinalVideo();
-      break;
-    case 'page8':
-      setupVoiceNotePage();
-      break;
+  
+  // Start specific media
+  if (pageId === 'page3') {
+    const video = document.getElementById('birthdayVideo');
+    if (video) video.play().catch(e => console.log('Video error:', e));
+  } else if (pageId === 'page7') {
+    startFinalVideo();
   }
 }
 
 function startFinalVideo() {
-  if (!finalVideo) return;
+  const video = document.getElementById('finalVideo');
+  if (!video) return;
   
-  finalVideo.muted = false;
-  finalVideo.volume = 1.0;
-  finalVideo.loop = true;
+  // Stop BGM
+  bgMusic.pause();
   
-  finalVideo.play()
+  // Try to play video with sound
+  video.muted = false;
+  video.volume = 1.0;
+  
+  video.play()
     .then(() => {
-      finalVideoPlaying = true;
       videoAudioIndicator.style.display = 'block';
-      videoAudioIndicator.style.opacity = '0.4';
     })
     .catch(e => {
-      console.log('Final video autoplay failed:', e);
-      // Mute and try again
-      finalVideo.muted = true;
-      finalVideo.play().then(() => {
-        finalVideoPlaying = true;
-        videoAudioIndicator.style.display = 'block';
-        videoAudioIndicator.style.opacity = '0.2';
-        // Try to unmute after 1 second
-        setTimeout(() => {
-          if (finalVideoPlaying) {
-            finalVideo.muted = false;
-            videoAudioIndicator.style.opacity = '0.4';
-          }
-        }, 1000);
-      }).catch(console.log);
+      console.log('Video autoplay failed, trying muted:', e);
+      // Try muted
+      video.muted = true;
+      video.play()
+        .then(() => {
+          videoAudioIndicator.style.display = 'block';
+          videoAudioIndicator.textContent = '🔇 Click to unmute';
+          videoAudioIndicator.style.opacity = '0.6';
+          // Add click to unmute
+          videoAudioIndicator.style.pointerEvents = 'auto';
+          videoAudioIndicator.style.cursor = 'pointer';
+          videoAudioIndicator.onclick = () => {
+            video.muted = false;
+            videoAudioIndicator.textContent = '🎵 Audio On';
+            videoAudioIndicator.style.pointerEvents = 'none';
+          };
+        })
+        .catch(e => console.log('Muted video also failed:', e));
     });
 }
 
 // ===== VOICE NOTE FUNCTIONS =====
-function setupVoiceNotePage() {
+function setupVoiceNote() {
   if (!voiceNoteAudio) return;
   
-  if (voiceNoteAudio.readyState >= 1) {
-    updateVoiceNoteDuration();
-  } else {
-    voiceNoteAudio.addEventListener('loadedmetadata', updateVoiceNoteDuration);
-  }
+  voiceNoteAudio.addEventListener('loadedmetadata', () => {
+    const duration = voiceNoteAudio.duration;
+    document.getElementById('duration').textContent = formatTime(duration);
+  });
   
-  voiceNoteAudio.addEventListener('timeupdate', updateVoiceNoteProgress);
-  voiceNoteAudio.addEventListener('ended', onVoiceNoteEnded);
-}
-
-function updateVoiceNoteDuration() {
-  const duration = voiceNoteAudio.duration;
-  durationDisplay.textContent = formatTime(duration);
-}
-
-function updateVoiceNoteProgress() {
-  if (!voiceNoteAudio.duration) return;
+  voiceNoteAudio.addEventListener('timeupdate', () => {
+    if (!voiceNoteAudio.duration) return;
+    
+    const current = voiceNoteAudio.currentTime;
+    const duration = voiceNoteAudio.duration;
+    const progress = (current / duration) * 100;
+    
+    document.getElementById('voiceProgress').style.width = `${progress}%`;
+    document.getElementById('currentTime').textContent = formatTime(current);
+  });
   
-  const current = voiceNoteAudio.currentTime;
-  const duration = voiceNoteAudio.duration;
-  const progress = (current / duration) * 100;
-  
-  voiceProgress.style.width = `${progress}%`;
-  currentTimeDisplay.textContent = formatTime(current);
-}
-
-function onVoiceNoteEnded() {
-  voiceNotePlaying = false;
-  voicePlayBtn.classList.remove('playing');
-  voiceProgress.style.width = '0%';
-  currentTimeDisplay.textContent = '0:00';
+  voiceNoteAudio.addEventListener('ended', () => {
+    document.getElementById('voicePlayBtn').classList.remove('playing');
+    document.getElementById('voiceProgress').style.width = '0%';
+    document.getElementById('currentTime').textContent = '0:00';
+  });
 }
 
 function toggleVoiceNote() {
   if (!voiceNoteAudio) return;
   
-  if (voiceNotePlaying) {
-    voiceNoteAudio.pause();
-    voiceNotePlaying = false;
-    voicePlayBtn.classList.remove('playing');
-  } else {
+  const playBtn = document.getElementById('voicePlayBtn');
+  
+  if (voiceNoteAudio.paused) {
+    // Stop BGM first
+    bgMusic.pause();
+    
     voiceNoteAudio.play()
       .then(() => {
-        voiceNotePlaying = true;
-        voicePlayBtn.classList.add('playing');
+        playBtn.classList.add('playing');
       })
       .catch(e => {
-        console.log('Voice note play failed:', e);
-        // Show user-friendly error
-        const note = document.querySelector('.voice-note-note');
-        if (note) {
-          note.textContent = 'Unable to play voice note. Please make sure voice_note.mp3 exists.';
-          note.style.color = '#ff6b6b';
-        }
+        console.log('Voice note error:', e);
+        playBtn.classList.remove('playing');
       });
+  } else {
+    voiceNoteAudio.pause();
+    playBtn.classList.remove('playing');
   }
 }
 
@@ -802,68 +697,36 @@ function formatTime(seconds) {
   return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
 }
 
-// ===== NAVIGATION FUNCTIONS =====
-function goToPage(index) {
-  if (index >= 0 && index < PAGES.length) {
-    showPage(PAGES[index]);
-  }
-}
-
-function nextPage() {
-  if (currentPageIndex < PAGES.length - 1) {
-    currentPageIndex++;
-    showPage(PAGES[currentPageIndex]);
-  }
-}
-
-function prevPage() {
-  if (currentPageIndex > 0) {
-    currentPageIndex--;
-    showPage(PAGES[currentPageIndex]);
-  }
-}
-
-// ===== UI UPDATE FUNCTIONS =====
-function updateProgress() {
+// ===== UI FUNCTIONS =====
+function updateUI() {
+  // Progress bar
   const totalPages = PAGES.length - 1;
-  const progress = Math.max(0, currentPageIndex - 1);
+  const progress = Math.max(0, currentPage - 1);
   const percentage = (progress / (totalPages - 1)) * 100;
   
-  progressBar.style.width = percentage + '%';
+  progressBar.style.width = `${percentage}%`;
+  progressContainer.classList.toggle('show', currentPage > 0);
   
-  if (currentPageIndex > 0) {
-    progressContainer.classList.add('show');
-  } else {
-    progressContainer.classList.remove('show');
-  }
-}
-
-function updatePageCounter() {
-  if (currentPageIndex > 0) {
-    pageCounter.textContent = `${currentPageIndex}/${PAGES.length - 1}`;
+  // Page counter
+  if (currentPage > 0) {
+    pageCounter.textContent = `${currentPage}/${PAGES.length - 1}`;
   } else {
     pageCounter.textContent = '';
   }
+  
+  // Home button
+  homeBtn.classList.toggle('show', currentPage > 0);
+  
+  // Navigation dots
+  updateNavDots();
 }
 
 function updateNavDots() {
   const dots = document.querySelectorAll('.nav-dot');
   dots.forEach((dot, index) => {
     const dotIndex = parseInt(dot.dataset.index);
-    if (dotIndex === currentPageIndex) {
-      dot.classList.add('active');
-    } else {
-      dot.classList.remove('active');
-    }
+    dot.classList.toggle('active', dotIndex === currentPage);
   });
-}
-
-function updateHomeButton() {
-  if (currentPageIndex > 0) {
-    homeBtn.classList.add('show');
-  } else {
-    homeBtn.classList.remove('show');
-  }
 }
 
 function createNavDots() {
@@ -872,51 +735,57 @@ function createNavDots() {
     const dot = document.createElement('div');
     dot.className = 'nav-dot';
     dot.dataset.index = i;
-    dot.addEventListener('click', () => goToPage(i));
+    dot.addEventListener('click', () => showPage(i));
     navDots.appendChild(dot);
   }
 }
 
-// ===== UNLOCK FUNCTION =====
+// ===== NAVIGATION =====
+function goToPage(index) {
+  showPage(index);
+}
+
+function nextPage() {
+  if (currentPage < PAGES.length - 1) {
+    showPage(currentPage + 1);
+  }
+}
+
+function prevPage() {
+  if (currentPage > 0) {
+    showPage(currentPage - 1);
+  }
+}
+
+// ===== UNLOCK =====
 function unlock() {
   const input = document.getElementById("password");
   const error = document.getElementById("error");
   
-  if (input.value.trim() === PASSWORD) {
+  if (input.value.trim() === "01022026") {
     error.classList.remove('show');
-    
-    // Start BGM and go to first page
-    playBGM();
-    showPage('page2');
+    showPage(1); // Go to page2
   } else {
     error.textContent = "Try 01022026";
     error.classList.add('show');
     input.value = '';
     input.focus();
-    
-    // Shake effect
-    input.style.transform = 'translateX(5px)';
-    setTimeout(() => input.style.transform = 'translateX(-5px)', 50);
-    setTimeout(() => input.style.transform = '', 100);
   }
 }
 
 // ===== ERROR HANDLING =====
 function handleMediaError(img, fallbackId) {
-  console.log('Image failed:', img.src);
   img.style.display = 'none';
   const fallback = document.getElementById(fallbackId);
   if (fallback) fallback.style.display = 'block';
 }
 
 function handleVideoError(fallbackId) {
-  console.log('Video failed');
   const fallback = document.getElementById(fallbackId);
   if (fallback) fallback.style.display = 'block';
 }
 
 function handleFinalVideoError(fallbackId) {
-  console.log('Final video failed');
   const fallback = document.getElementById(fallbackId);
   if (fallback) fallback.style.display = 'block';
   videoAudioIndicator.style.display = 'none';
@@ -924,17 +793,18 @@ function handleFinalVideoError(fallbackId) {
 
 // ===== INITIALIZATION =====
 document.addEventListener('DOMContentLoaded', () => {
-  // Initialize UI
+  // Setup
   createNavDots();
-  updateNavDots();
+  setupVoiceNote();
   
-  // Password enter key
+  // Password enter
   document.getElementById('password').addEventListener('keypress', e => {
     if (e.key === 'Enter') unlock();
   });
   
-  // Click to advance
+  // Simple click navigation
   document.addEventListener('click', (e) => {
+    if (currentPage === 0) return;
     if (e.target.tagName === 'BUTTON' || 
         e.target.tagName === 'INPUT' ||
         e.target.closest('.nav-dots') ||
@@ -945,34 +815,33 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     
-    if (currentPageIndex === 0) return;
-    if (currentPageIndex < PAGES.length - 1) {
+    if (currentPage < PAGES.length - 1) {
       nextPage();
     }
   });
   
-  // Keyboard navigation
+  // Keyboard
   document.addEventListener('keydown', (e) => {
     switch(e.key) {
       case 'ArrowRight':
       case ' ':
-        if (currentPageIndex > 0 && currentPageIndex < PAGES.length - 1) {
+        if (currentPage > 0 && currentPage < PAGES.length - 1) {
           nextPage();
           e.preventDefault();
         }
         break;
       case 'ArrowLeft':
-        if (currentPageIndex > 0) {
+        if (currentPage > 0) {
           prevPage();
           e.preventDefault();
         }
         break;
       case 'Escape':
-        goToPage(0);
+        showPage(0);
         e.preventDefault();
         break;
       case ' ':
-        if (currentPageIndex === 7) {
+        if (currentPage === 7) {
           toggleVoiceNote();
           e.preventDefault();
         }
@@ -980,69 +849,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
   
-  // Swipe gestures
-  let startX = 0;
+  // Swipe
+  let touchStartX = 0;
   document.addEventListener('touchstart', (e) => {
-    startX = e.touches[0].clientX;
+    touchStartX = e.touches[0].clientX;
   }, { passive: true });
   
   document.addEventListener('touchend', (e) => {
-    const endX = e.changedTouches[0].clientX;
-    const diff = startX - endX;
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = touchStartX - touchEndX;
     
-    if (Math.abs(diff) > 50) {
-      if (diff > 0 && currentPageIndex < PAGES.length - 1 && currentPageIndex > 0) {
+    if (Math.abs(diff) > 50 && currentPage > 0) {
+      if (diff > 0 && currentPage < PAGES.length - 1) {
         nextPage();
-      } else if (diff < 0 && currentPageIndex > 0) {
+      } else if (diff < 0) {
         prevPage();
       }
     }
   }, { passive: true });
   
-  // Video loops
-  if (firstVideo) {
-    firstVideo.addEventListener('ended', () => {
-      if (currentPageIndex === 2) {
-        firstVideo.currentTime = 0;
-        firstVideo.play();
-      }
-    });
-  }
-  
-  if (finalVideo) {
-    finalVideo.addEventListener('ended', () => {
-      if (currentPageIndex === 6) {
-        finalVideo.currentTime = 0;
-        finalVideo.play();
-      }
-    });
-  }
-  
-  // Page visibility
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-      // Pause everything when tab is hidden
-      if (bgMusicPlaying) bgMusic.pause();
-      if (finalVideoPlaying && finalVideo) finalVideo.pause();
-      if (firstVideo && currentPageIndex === 2) firstVideo.pause();
-      if (voiceNotePlaying && voiceNoteAudio) voiceNoteAudio.pause();
-    } else {
-      // Resume when visible
-      setTimeout(() => {
-        if (currentPageIndex === 6 && finalVideoPlaying && finalVideo) {
-          finalVideo.play().catch(console.log);
-        } else if (currentPageIndex === 2 && firstVideo) {
-          firstVideo.play().catch(console.log);
-        } else if (currentPageIndex === 7 && voiceNotePlaying && voiceNoteAudio) {
-          voiceNoteAudio.play().catch(console.log);
-        } else if (currentPageIndex >= 2 && currentPageIndex <= 6 && bgMusicPlaying) {
-          bgMusic.play().catch(console.log);
-        }
-      }, 300);
-    }
-  });
-  
-  // Auto-focus password
+  // Auto-focus
   document.getElementById('password').focus();
 });
 </script>
