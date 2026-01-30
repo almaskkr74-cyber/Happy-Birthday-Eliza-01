@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Birthday Surprise ✨</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#000;color:#fff;overflow:hidden;height:100vh;width:100vw}
+.section{position:fixed;inset:0;opacity:0;visibility:hidden;transition:opacity .4s ease}
+.section.active{opacity:1;visibility:visible;z-index:2}
+.media-page{display:flex;justify-content:center;align-items:center;background:#000}
+.media-content{max-width:100%;max-height:100%;object-fit:contain}
+.video-page .media-content{width:100%;height:100%;object-fit:cover}
+#login{display:flex;justify-content:center;align-items:center;background:linear-gradient(135deg,#0f0c29,#302b63,#24243e)}
+.login-container{text-align:center;width:90%;max-width:280px}
+.password-input,.unlock-btn{width:100%;padding:12px;border-radius:6px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff}
+.unlock-btn{margin-top:10px;cursor:pointer}
+.error-message{color:#ff6b6b;font-size:.8rem;height:18px;margin-top:8px;opacity:0}
+.error-message.show{opacity:1}
+.nav-dots{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:8px}
+.nav-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer}
+.nav-dot.active{background:#fff}
+</style>
+</head>
+
+<body>
+
+<section class="section active" id="login">
+  <div class="login-container">
+    <h1>🎂 Birthday Surprise</h1>
+    <p style="opacity:.6;margin:10px 0">Enter the date</p>
+    <input id="password" class="password-input" placeholder="01022026" />
+    <button class="unlock-btn" onclick="unlock()">Begin</button>
+    <div id="error" class="error-message"></div>
+  </div>
+</section>
+
+<section class="section media-page" id="page2">
+  <img src="image1.jpg" loading="lazy" class="media-content">
+</section>
+
+<section class="section media-page video-page" id="page3">
+  <video id="video1" preload="none" muted loop playsinline class="media-content">
+    <source src="video.mp4" type="video/mp4">
+  </video>
+</section>
+
+<section class="section media-page" id="page4">
+  <img src="image2.jpg" loading="lazy" class="media-content">
+</section>
+
+<section class="section media-page video-page" id="page5">
+  <video id="finalVideo" preload="none" playsinline class="media-content">
+    <source src="final_video.mp4" type="video/mp4">
+  </video>
+</section>
+
+<section class="section" id="page6" style="display:flex;justify-content:center;align-items:center;flex-direction:column">
+  <h2>🎙️ A Special Message</h2>
+  <button class="unlock-btn" onclick="toggleVoice()">▶ Play</button>
+</section>
+
+<audio id="bgm" preload="none" loop>
+  <source src="moon.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="voice" preload="none">
+  <source src="voice_note.mp3" type="audio/mpeg">
+</audio>
+
+<div class="nav-dots" id="dots"></div>
+
+<script>
+const PASSWORD="01022026";
+const PAGES=["login","page2","page3","page4","page5","page6"];
+let index=0,currentAudio=null;
+
+const bgm=document.getElementById("bgm");
+const voice=document.getElementById("voice");
+const video1=document.getElementById("video1");
+const finalVideo=document.getElementById("finalVideo");
+
+function stopAll(){
+ [bgm,voice,video1,finalVideo].forEach(m=>{if(m){m.pause();m.currentTime=0}});
+ currentAudio=null;
+}
+
+function play(media,vol=1){
+ if(currentAudio===media) return;
+ stopAll();
+ currentAudio=media;
+ media.volume=vol;
+ media.play().catch(()=>{});
+}
+
+function show(i){
+ stopAll();
+ document.getElementById(PAGES[index]).classList.remove("active");
+ index=i;
+ document.getElementById(PAGES[index]).classList.add("active");
+
+ if(index>0 && index<4) play(bgm,.3);
+ if(index===2) video1.play();
+ if(index===4) play(finalVideo,1);
+}
+
+function unlock(){
+ const val=password.value.trim();
+ if(val===PASSWORD){show(1)}
+ else{
+  error.textContent="Try 01022026";
+  error.classList.add("show");
+ }
+}
+
+function toggleVoice(){
+ if(voice.paused) play(voice,1);
+ else voice.pause();
+}
+
+const dots=document.getElementById("dots");
+PAGES.slice(1).forEach((_,i)=>{
+ const d=document.createElement("div");
+ d.className="nav-dot";
+ d.onclick=()=>show(i+1);
+ dots.appendChild(d);
+});
+
+document.addEventListener("click",e=>{
+ if(e.target.tagName==="BUTTON"||index===0) return;
+ if(index<PAGES.length-1) show(index+1);
+});
+</script>
+</body>
+</html>
