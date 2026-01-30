@@ -6,296 +6,156 @@
 <title>Birthday Surprise ✨</title>
 
 <style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: #000;
+/* RESET & BASICS */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { 
+  font-family: system-ui, -apple-system, sans-serif;
+  background: black;
   color: white;
   height: 100vh;
-  width: 100vw;
   overflow: hidden;
 }
 
-/* Simple page system - no transitions that cause delays */
+/* SIMPLE PAGE SYSTEM */
 .page {
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 0; left: 0;
   width: 100vw;
   height: 100vh;
   display: none;
-  z-index: 1;
 }
-
 .page.active {
-  display: flex;
-  z-index: 2;
-}
-
-/* ===== LOGIN PAGE ===== */
-#login {
-  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-  justify-content: center;
-  align-items: center;
-}
-
-.login-container {
-  text-align: center;
-  max-width: 280px;
-  width: 90%;
-}
-
-.logo {
-  font-size: 3rem;
-  margin-bottom: 20px;
-}
-
-.login-title {
-  font-size: 1.5rem;
-  margin-bottom: 10px;
-  font-weight: 300;
-  letter-spacing: 0.5px;
-}
-
-.password-input {
-  width: 100%;
-  padding: 12px 16px;
-  margin: 20px 0;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.08);
-  color: white;
-  font-size: 0.95rem;
-  outline: none;
-  text-align: center;
-}
-
-.unlock-btn {
-  width: 100%;
-  padding: 12px;
-  background: rgba(255, 255, 255, 0.12);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 6px;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.unlock-btn:hover {
-  background: rgba(255, 255, 255, 0.18);
-}
-
-.error-message {
-  color: #ff6b6b;
-  margin-top: 12px;
-  font-size: 0.8rem;
-  min-height: 18px;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.error-message.show {
-  opacity: 1;
-}
-
-/* ===== MEDIA PAGES ===== */
-.media-page {
-  background: #000;
-  justify-content: center;
-  align-items: center;
-}
-
-.media-content {
-  max-width: 100vw;
-  max-height: 100vh;
-  width: auto;
-  height: auto;
   display: block;
 }
 
-/* ===== VIDEO PAGES ===== */
-.video-page .media-content {
+/* LOGIN PAGE */
+#login {
+  background: linear-gradient(135deg, #0f0c29, #302b63);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.login-box {
+  text-align: center;
+  padding: 20px;
+  max-width: 300px;
+  width: 90%;
+}
+.login-box h1 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  font-weight: 300;
+}
+.login-box input {
+  width: 100%;
+  padding: 12px;
+  margin: 15px 0;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+  text-align: center;
+}
+.login-box button {
+  width: 100%;
+  padding: 12px;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.login-box .error {
+  color: #ff6b6b;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  min-height: 20px;
+}
+
+/* MEDIA PAGES */
+.media-page {
+  background: black;
+}
+.media-page img,
+.media-page video {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
-/* Hide video controls */
-video::-webkit-media-controls {
-  display: none !important;
-}
-
-/* ===== VOICE NOTE PAGE ===== */
+/* VOICE NOTE PAGE */
 #page8 {
   background: linear-gradient(135deg, #1a1a2e, #16213e);
+  display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   text-align: center;
   padding: 20px;
 }
-
-.voice-note-container {
-  max-width: 500px;
-  width: 90%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 30px;
-}
-
-.voice-note-icon {
-  font-size: 4rem;
-  margin-bottom: 10px;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
-}
-
-.voice-note-title {
-  font-size: 2.5rem;
-  font-weight: 300;
-  margin-bottom: 10px;
-  letter-spacing: 1px;
-}
-
-.voice-note-subtitle {
-  font-size: 1.2rem;
-  opacity: 0.8;
-  margin-bottom: 20px;
-  line-height: 1.5;
-}
-
-.voice-note-controls {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  align-items: center;
-  margin-top: 20px;
-}
-
-.play-btn {
-  background: rgba(255, 255, 255, 0.15);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  width: 80px;
-  height: 80px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 1.8rem;
-}
-
-.play-btn:hover {
-  background: rgba(255, 255, 255, 0.25);
-  transform: scale(1.05);
-}
-
-.play-btn.playing {
-  background: rgba(255, 107, 107, 0.3);
-  border-color: rgba(255, 107, 107, 0.6);
-}
-
-.play-btn.playing .play-icon {
-  display: none;
-}
-
-.play-btn.playing .pause-icon {
-  display: block;
-}
-
-.play-icon {
-  display: block;
-}
-
-.pause-icon {
-  display: none;
-}
-
-.voice-note-progress {
-  width: 80%;
-  max-width: 300px;
-  margin-top: 10px;
-}
-
-.progress-bar-container {
-  width: 100%;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 2px;
-  overflow: hidden;
-  margin-bottom: 5px;
-}
-
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #f093fb, #f5576c);
-  width: 0%;
-  transition: width 0.1s linear;
-}
-
-.time-display {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  font-size: 0.8rem;
-  opacity: 0.7;
-}
-
-.voice-note-note {
-  font-size: 0.9rem;
-  opacity: 0.6;
-  font-style: italic;
-  margin-top: 20px;
+.voice-box {
   max-width: 400px;
 }
+.voice-box h2 {
+  font-size: 2rem;
+  margin: 20px 0 10px;
+  font-weight: 300;
+}
+.voice-box p {
+  opacity: 0.8;
+  margin-bottom: 30px;
+}
+.play-btn {
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  margin: 20px auto;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+.play-btn.playing {
+  background: rgba(255,107,107,0.3);
+  border-color: rgba(255,107,107,0.6);
+}
 
-/* ===== SIMPLE PROGRESS BAR ===== */
-.progress-container {
+/* PROGRESS BAR */
+.progress {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 2px;
-  background: rgba(255, 255, 255, 0.1);
+  top: 0; left: 0;
+  width: 100%;
+  height: 3px;
+  background: rgba(255,255,255,0.1);
   z-index: 1000;
-  opacity: 0;
+  display: none;
 }
-
-.progress-container.show {
-  opacity: 1;
-}
-
+.progress.active { display: block; }
 .progress-bar {
   height: 100%;
   background: linear-gradient(90deg, #f093fb, #f5576c);
   width: 0%;
+  transition: width 0.3s ease;
 }
 
-/* ===== PAGE COUNTER ===== */
-.page-counter {
+/* PAGE COUNTER */
+.counter {
   position: fixed;
   top: 15px;
   right: 15px;
-  font-size: 0.8rem;
-  opacity: 0.4;
+  font-size: 0.9rem;
+  opacity: 0.5;
   z-index: 1001;
 }
 
-/* ===== NAVIGATION DOTS ===== */
-.nav-dots {
+/* NAV DOTS */
+.dots {
   position: fixed;
   bottom: 20px;
   left: 50%;
@@ -304,572 +164,480 @@ video::-webkit-media-controls {
   gap: 8px;
   z-index: 1001;
 }
-
-.nav-dot {
+.dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.3);
-  transition: all 0.3s ease;
+  background: rgba(255,255,255,0.3);
   cursor: pointer;
 }
-
-.nav-dot.active {
-  background: rgba(255, 255, 255, 0.9);
+.dot.active {
+  background: white;
   transform: scale(1.2);
 }
 
-/* ===== CONTROLS ===== */
-.control-hint {
+/* HOME BUTTON */
+.home {
   position: fixed;
-  bottom: 20px;
-  left: 20px;
-  font-size: 0.75rem;
-  opacity: 0.3;
-  z-index: 1001;
-}
-
-.home-btn {
-  position: fixed;
-  top: 15px;
-  left: 15px;
-  width: 30px;
-  height: 30px;
+  top: 10px;
+  left: 10px;
+  width: 36px;
+  height: 36px;
+  background: rgba(255,255,255,0.1);
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   z-index: 1001;
   opacity: 0;
-  transition: opacity 0.3s;
-  font-size: 0.9rem;
+}
+.home.show { opacity: 0.5; }
+.home:hover { opacity: 0.8; }
+
+/* HINT */
+.hint {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  font-size: 0.8rem;
+  opacity: 0.3;
+  z-index: 1001;
 }
 
-.home-btn.show {
-  opacity: 0.5;
-}
-
-.home-btn:hover {
-  opacity: 0.8;
-}
-
-/* ===== VIDEO INDICATOR ===== */
-.video-audio-indicator {
+/* VIDEO AUDIO INDICATOR */
+.video-audio {
   position: fixed;
   bottom: 50px;
   right: 20px;
-  font-size: 0.8rem;
-  opacity: 0.4;
-  z-index: 1001;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0,0,0,0.3);
   padding: 5px 10px;
   border-radius: 10px;
-  display: none;
-  pointer-events: none;
-}
-
-/* ===== FALLBACK ===== */
-.media-fallback {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
+  font-size: 0.8rem;
   opacity: 0.5;
-  font-size: 0.9rem;
+  z-index: 1001;
+  display: none;
 }
 </style>
 </head>
 
 <body>
 
-<!-- Progress Bar -->
-<div class="progress-container" id="progressContainer">
+<!-- Simple progress bar -->
+<div class="progress" id="progress">
   <div class="progress-bar" id="progressBar"></div>
 </div>
 
-<div class="page-counter" id="pageCounter"></div>
+<!-- Page counter -->
+<div class="counter" id="counter"></div>
 
-<!-- Home Button -->
-<div class="home-btn" id="homeBtn" onclick="goToPage(0)">⌂</div>
+<!-- Home button -->
+<div class="home" id="homeBtn" onclick="goToPage(0)">⌂</div>
 
-<!-- Navigation Dots -->
-<div class="nav-dots" id="navDots"></div>
+<!-- Navigation dots -->
+<div class="dots" id="dots"></div>
 
-<div class="control-hint">← → or click to navigate</div>
-<div class="video-audio-indicator" id="videoAudioIndicator">🎵 Audio On</div>
+<!-- Hint -->
+<div class="hint">Click or use arrows</div>
 
-<!-- ===== PAGE 1: LOGIN ===== -->
-<section class="page active" id="login">
-  <div class="login-container">
-    <div class="logo">🎂</div>
-    <h1 class="login-title">Birthday Surprise</h1>
-    <p style="opacity:0.6; margin-bottom:20px; font-size:0.9rem">Enter the date</p>
-    
-    <input type="password" id="password" class="password-input" 
-           placeholder="01022026" 
-           autocomplete="off" 
-           autofocus />
-    
-    <button class="unlock-btn" onclick="unlock()">
-      Begin
-    </button>
-    
-    <div id="error" class="error-message"></div>
+<!-- Video audio indicator -->
+<div class="video-audio" id="audioIndicator">🎵 Audio On</div>
+
+<!-- ===== PAGES ===== -->
+
+<!-- Page 1: Login -->
+<div class="page active" id="page1">
+  <div class="login-box">
+    <div style="font-size: 3rem; margin-bottom: 20px;">🎂</div>
+    <h1>Birthday Surprise</h1>
+    <p style="opacity: 0.7; margin-bottom: 20px;">Enter the date</p>
+    <input type="password" id="password" placeholder="01022026" autofocus>
+    <button onclick="checkPassword()">Begin</button>
+    <div class="error" id="error"></div>
   </div>
-</section>
+</div>
 
-<!-- ===== PAGE 2: FIRST IMAGE ===== -->
-<section class="page media-page" id="page2">
-  <img src="image1.jpg" class="media-content" alt="Memory 1"
-       onerror="handleMediaError(this, 'fallback2')"
-       loading="eager">
-  <div id="fallback2" class="media-fallback" style="display:none;">
-    🎉 Image 1
-  </div>
-</section>
+<!-- Page 2-6: Images -->
+<div class="page media-page" id="page2">
+  <img src="image1.jpg" alt="Image 1" onerror="this.style.display='none'">
+</div>
 
-<!-- ===== PAGE 3: FIRST VIDEO ===== -->
-<section class="page media-page video-page" id="page3">
-  <video id="birthdayVideo" class="media-content" muted playsinline loop
-         onerror="handleVideoError('fallback3')">
+<div class="page media-page" id="page3">
+  <video id="video1" muted loop playsinline onerror="console.log('Video error')">
     <source src="video.mp4" type="video/mp4">
   </video>
-  <div id="fallback3" class="media-fallback" style="display:none;">
-    🎥 Video 1
-  </div>
-</section>
+</div>
 
-<!-- ===== PAGE 4: SECOND IMAGE ===== -->
-<section class="page media-page" id="page4">
-  <img src="image2.jpg" class="media-content" alt="Memory 2"
-       onerror="handleMediaError(this, 'fallback4')"
-       loading="eager">
-  <div id="fallback4" class="media-fallback" style="display:none;">
-    ✨ Image 2
-  </div>
-</section>
+<div class="page media-page" id="page4">
+  <img src="image2.jpg" alt="Image 2" onerror="this.style.display='none'">
+</div>
 
-<!-- ===== PAGE 5: THIRD IMAGE ===== -->
-<section class="page media-page" id="page5">
-  <img src="image3.jpg" class="media-content" alt="Memory 3"
-       onerror="handleMediaError(this, 'fallback5')"
-       loading="eager">
-  <div id="fallback5" class="media-fallback" style="display:none;">
-    🎊 Image 3
-  </div>
-</section>
+<div class="page media-page" id="page5">
+  <img src="image3.jpg" alt="Image 3" onerror="this.style.display='none'">
+</div>
 
-<!-- ===== PAGE 6: FOURTH IMAGE ===== -->
-<section class="page media-page" id="page6">
-  <img src="image4.jpg" class="media-content" alt="Final"
-       onerror="handleMediaError(this, 'fallback6')"
-       loading="eager">
-  <div id="fallback6" class="media-fallback" style="display:none;">
-    💫 Image 4
-  </div>
-</section>
+<div class="page media-page" id="page6">
+  <img src="image4.jpg" alt="Image 4" onerror="this.style.display='none'">
+</div>
 
-<!-- ===== PAGE 7: FINAL VIDEO ===== -->
-<section class="page media-page video-page" id="page7">
-  <video id="finalVideo" class="media-content" playsinline
-         onerror="handleFinalVideoError('fallback7')">
+<!-- Page 7: Final Video -->
+<div class="page media-page" id="page7">
+  <video id="finalVideo" playsinline onerror="console.log('Final video error')">
     <source src="final_video.mp4" type="video/mp4">
   </video>
-  <div id="fallback7" class="media-fallback" style="display:none;">
-    🎬 Final Video
-  </div>
-</section>
+</div>
 
-<!-- ===== PAGE 8: VOICE NOTE ===== -->
-<section class="page" id="page8">
-  <div class="voice-note-container">
-    <div class="voice-note-icon">🎙️</div>
-    <h2 class="voice-note-title">A Special Message</h2>
-    <p class="voice-note-subtitle">This is a personal voice note for you.<br>Listen carefully to every word.</p>
-    
-    <div class="voice-note-controls">
-      <div class="play-btn" id="voicePlayBtn" onclick="toggleVoiceNote()">
-        <div class="play-icon">▶</div>
-        <div class="pause-icon">⏸</div>
-      </div>
-      
-      <div class="voice-note-progress">
-        <div class="progress-bar-container">
-          <div class="progress-fill" id="voiceProgress"></div>
-        </div>
-        <div class="time-display">
-          <span id="currentTime">0:00</span>
-          <span id="duration">0:00</span>
-        </div>
-      </div>
+<!-- Page 8: Voice Note -->
+<div class="page" id="page8">
+  <div class="voice-box">
+    <div style="font-size: 4rem;">🎙️</div>
+    <h2>A Special Message</h2>
+    <p>Listen to this personal voice note for you</p>
+    <div class="play-btn" id="playBtn" onclick="toggleVoiceNote()">
+      ▶
     </div>
-    
-    <p class="voice-note-note">Click the play button to hear a heartfelt message. This is the final surprise!</p>
+    <p style="font-size: 0.9rem; opacity: 0.6; margin-top: 20px;">
+      Click play to hear the message
+    </p>
   </div>
-</section>
+</div>
 
 <!-- Audio Elements -->
-<audio id="backgroundMusic" loop>
+<audio id="bgm" loop>
   <source src="moon.mp3" type="audio/mpeg">
 </audio>
 
-<audio id="voiceNoteAudio">
+<audio id="voiceNote">
   <source src="voice_note.mp3" type="audio/mpeg">
 </audio>
 
 <script>
 // ===== SIMPLE STATE =====
-const PAGES = ["login", "page2", "page3", "page4", "page5", "page6", "page7", "page8"];
 let currentPage = 0;
-let bgMusicStarted = false;
+const totalPages = 8;
+let bgmPlaying = false;
 
 // ===== ELEMENTS =====
-const bgMusic = document.getElementById('backgroundMusic');
-const voiceNoteAudio = document.getElementById('voiceNoteAudio');
+const bgm = document.getElementById('bgm');
+const voiceNote = document.getElementById('voiceNote');
+const video1 = document.getElementById('video1');
+const finalVideo = document.getElementById('finalVideo');
+const playBtn = document.getElementById('playBtn');
+const progress = document.getElementById('progress');
 const progressBar = document.getElementById('progressBar');
-const progressContainer = document.getElementById('progressContainer');
-const pageCounter = document.getElementById('pageCounter');
+const counter = document.getElementById('counter');
 const homeBtn = document.getElementById('homeBtn');
-const navDots = document.getElementById('navDots');
-const videoAudioIndicator = document.getElementById('videoAudioIndicator');
+const dots = document.getElementById('dots');
+const audioIndicator = document.getElementById('audioIndicator');
 
-// ===== SIMPLE PAGE MANAGEMENT =====
-function showPage(index) {
-  if (index < 0 || index >= PAGES.length) return;
+// ===== INITIAL SETUP =====
+// Create navigation dots
+for (let i = 1; i < totalPages; i++) {
+  const dot = document.createElement('div');
+  dot.className = 'dot';
+  dot.onclick = () => goToPage(i);
+  dots.appendChild(dot);
+}
+
+// Setup voice note
+voiceNote.onloadedmetadata = function() {
+  console.log('Voice note loaded:', voiceNote.duration);
+};
+voiceNote.onended = function() {
+  playBtn.classList.remove('playing');
+  playBtn.innerHTML = '▶';
+};
+
+// ===== PASSWORD CHECK =====
+function checkPassword() {
+  const input = document.getElementById('password').value;
+  const error = document.getElementById('error');
   
-  // Hide all pages
-  PAGES.forEach(page => {
-    document.getElementById(page).classList.remove('active');
-  });
+  if (input === '01022026') {
+    error.textContent = '';
+    // Start BGM
+    bgm.volume = 0.3;
+    bgm.play().then(() => {
+      bgmPlaying = true;
+    }).catch(e => {
+      console.log('BGM play failed:', e);
+    });
+    // Go to first content page
+    goToPage(1);
+  } else {
+    error.textContent = 'Try 01022026';
+  }
+}
+
+// ===== PAGE NAVIGATION =====
+function goToPage(pageNum) {
+  if (pageNum < 0 || pageNum >= totalPages) return;
+  
+  // Hide current page
+  document.querySelector('.page.active').classList.remove('active');
   
   // Stop media from current page
-  stopCurrentMedia();
+  stopCurrentMedia(currentPage);
+  
+  // Update current page
+  currentPage = pageNum;
   
   // Show new page
-  currentPage = index;
-  document.getElementById(PAGES[index]).classList.add('active');
+  document.getElementById(`page${pageNum + 1}`).classList.add('active');
   
   // Update UI
   updateUI();
   
   // Start media for new page
-  startPageMedia(index);
+  startPageMedia(pageNum);
 }
 
-function stopCurrentMedia() {
-  const currentPageId = PAGES[currentPage];
-  
-  if (currentPageId === 'page3') {
-    const video = document.getElementById('birthdayVideo');
-    if (video) video.pause();
-  } else if (currentPageId === 'page7') {
-    const video = document.getElementById('finalVideo');
-    if (video) video.pause();
-    videoAudioIndicator.style.display = 'none';
-  } else if (currentPageId === 'page8') {
-    if (voiceNoteAudio) {
-      voiceNoteAudio.pause();
-      document.getElementById('voicePlayBtn').classList.remove('playing');
-    }
+function stopCurrentMedia(pageNum) {
+  switch(pageNum) {
+    case 2: // Page 3 (video1)
+      if (video1) video1.pause();
+      break;
+    case 6: // Page 7 (final video)
+      if (finalVideo) {
+        finalVideo.pause();
+        audioIndicator.style.display = 'none';
+      }
+      break;
+    case 7: // Page 8 (voice note)
+      if (voiceNote) {
+        voiceNote.pause();
+        playBtn.classList.remove('playing');
+        playBtn.innerHTML = '▶';
+      }
+      break;
   }
 }
 
-function startPageMedia(index) {
-  const pageId = PAGES[index];
+function startPageMedia(pageNum) {
+  // Manage BGM - SIMPLE RULE:
+  // Play BGM on pages 2-6 (images and first video)
+  // Stop BGM on pages 0, 1, 7, 8 (login, final video, voice note)
   
-  // Manage BGM
-  if (index >= 2 && index <= 6) {
-    // Pages 2-6: Play BGM
-    if (!bgMusicStarted) {
-      bgMusic.volume = 0.3;
-      bgMusic.play().catch(e => console.log('BGM error:', e));
-      bgMusicStarted = true;
-    } else {
-      bgMusic.play().catch(e => console.log('BGM resume error:', e));
+  if (pageNum >= 1 && pageNum <= 5) {
+    // Pages 2-6: Play BGM if not playing
+    if (!bgmPlaying && bgm) {
+      bgm.play().then(() => {
+        bgmPlaying = true;
+      }).catch(e => console.log('BGM error:', e));
     }
-  } else if (index === 7 || index === 0) {
-    // Page 7 (video) or login: Pause BGM
-    bgMusic.pause();
+  } else {
+    // Other pages: Stop BGM
+    if (bgmPlaying && bgm) {
+      bgm.pause();
+      bgmPlaying = false;
+    }
   }
   
   // Start specific media
-  if (pageId === 'page3') {
-    const video = document.getElementById('birthdayVideo');
-    if (video) video.play().catch(e => console.log('Video error:', e));
-  } else if (pageId === 'page7') {
-    startFinalVideo();
+  switch(pageNum) {
+    case 2: // Page 3 (first video)
+      if (video1) {
+        video1.muted = true;
+        video1.play().catch(e => console.log('Video1 error:', e));
+      }
+      break;
+    case 6: // Page 7 (final video)
+      startFinalVideo();
+      break;
   }
 }
 
 function startFinalVideo() {
-  const video = document.getElementById('finalVideo');
-  if (!video) return;
+  if (!finalVideo) return;
   
   // Stop BGM
-  bgMusic.pause();
+  if (bgmPlaying && bgm) {
+    bgm.pause();
+    bgmPlaying = false;
+  }
   
-  // Try to play video with sound
-  video.muted = false;
-  video.volume = 1.0;
+  // Try to play with audio
+  finalVideo.muted = false;
+  finalVideo.volume = 1.0;
   
-  video.play()
+  finalVideo.play()
     .then(() => {
-      videoAudioIndicator.style.display = 'block';
+      audioIndicator.style.display = 'block';
     })
     .catch(e => {
-      console.log('Video autoplay failed, trying muted:', e);
+      console.log('Final video autoplay failed, trying muted:', e);
       // Try muted
-      video.muted = true;
-      video.play()
+      finalVideo.muted = true;
+      finalVideo.play()
         .then(() => {
-          videoAudioIndicator.style.display = 'block';
-          videoAudioIndicator.textContent = '🔇 Click to unmute';
-          videoAudioIndicator.style.opacity = '0.6';
-          // Add click to unmute
-          videoAudioIndicator.style.pointerEvents = 'auto';
-          videoAudioIndicator.style.cursor = 'pointer';
-          videoAudioIndicator.onclick = () => {
-            video.muted = false;
-            videoAudioIndicator.textContent = '🎵 Audio On';
-            videoAudioIndicator.style.pointerEvents = 'none';
+          audioIndicator.textContent = '🔇 Click to unmute';
+          audioIndicator.style.display = 'block';
+          audioIndicator.style.cursor = 'pointer';
+          audioIndicator.onclick = function() {
+            finalVideo.muted = false;
+            audioIndicator.textContent = '🎵 Audio On';
+            audioIndicator.style.cursor = 'default';
+            audioIndicator.onclick = null;
           };
         })
         .catch(e => console.log('Muted video also failed:', e));
     });
 }
 
-// ===== VOICE NOTE FUNCTIONS =====
-function setupVoiceNote() {
-  if (!voiceNoteAudio) return;
-  
-  voiceNoteAudio.addEventListener('loadedmetadata', () => {
-    const duration = voiceNoteAudio.duration;
-    document.getElementById('duration').textContent = formatTime(duration);
-  });
-  
-  voiceNoteAudio.addEventListener('timeupdate', () => {
-    if (!voiceNoteAudio.duration) return;
-    
-    const current = voiceNoteAudio.currentTime;
-    const duration = voiceNoteAudio.duration;
-    const progress = (current / duration) * 100;
-    
-    document.getElementById('voiceProgress').style.width = `${progress}%`;
-    document.getElementById('currentTime').textContent = formatTime(current);
-  });
-  
-  voiceNoteAudio.addEventListener('ended', () => {
-    document.getElementById('voicePlayBtn').classList.remove('playing');
-    document.getElementById('voiceProgress').style.width = '0%';
-    document.getElementById('currentTime').textContent = '0:00';
-  });
-}
-
+// ===== VOICE NOTE =====
 function toggleVoiceNote() {
-  if (!voiceNoteAudio) return;
+  if (!voiceNote) return;
   
-  const playBtn = document.getElementById('voicePlayBtn');
-  
-  if (voiceNoteAudio.paused) {
-    // Stop BGM first
-    bgMusic.pause();
+  if (voiceNote.paused) {
+    // Stop other audio
+    if (bgmPlaying && bgm) bgm.pause();
+    if (finalVideo && !finalVideo.paused) finalVideo.pause();
     
-    voiceNoteAudio.play()
+    voiceNote.play()
       .then(() => {
         playBtn.classList.add('playing');
+        playBtn.innerHTML = '⏸';
       })
       .catch(e => {
         console.log('Voice note error:', e);
-        playBtn.classList.remove('playing');
+        playBtn.innerHTML = '❌';
       });
   } else {
-    voiceNoteAudio.pause();
+    voiceNote.pause();
     playBtn.classList.remove('playing');
+    playBtn.innerHTML = '▶';
   }
 }
 
-function formatTime(seconds) {
-  const mins = Math.floor(seconds / 60);
-  const secs = Math.floor(seconds % 60);
-  return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-}
-
-// ===== UI FUNCTIONS =====
+// ===== UPDATE UI =====
 function updateUI() {
   // Progress bar
-  const totalPages = PAGES.length - 1;
-  const progress = Math.max(0, currentPage - 1);
-  const percentage = (progress / (totalPages - 1)) * 100;
-  
-  progressBar.style.width = `${percentage}%`;
-  progressContainer.classList.toggle('show', currentPage > 0);
+  if (currentPage > 0) {
+    progress.classList.add('active');
+    const progressPercent = ((currentPage - 1) / (totalPages - 2)) * 100;
+    progressBar.style.width = progressPercent + '%';
+  } else {
+    progress.classList.remove('active');
+  }
   
   // Page counter
   if (currentPage > 0) {
-    pageCounter.textContent = `${currentPage}/${PAGES.length - 1}`;
+    counter.textContent = `${currentPage}/${totalPages - 1}`;
   } else {
-    pageCounter.textContent = '';
+    counter.textContent = '';
   }
   
   // Home button
-  homeBtn.classList.toggle('show', currentPage > 0);
+  if (currentPage > 0) {
+    homeBtn.classList.add('show');
+  } else {
+    homeBtn.classList.remove('show');
+  }
   
   // Navigation dots
-  updateNavDots();
-}
-
-function updateNavDots() {
-  const dots = document.querySelectorAll('.nav-dot');
-  dots.forEach((dot, index) => {
-    const dotIndex = parseInt(dot.dataset.index);
-    dot.classList.toggle('active', dotIndex === currentPage);
+  const dotElements = document.querySelectorAll('.dot');
+  dotElements.forEach((dot, index) => {
+    if (index === currentPage - 1) {
+      dot.classList.add('active');
+    } else {
+      dot.classList.remove('active');
+    }
   });
 }
 
-function createNavDots() {
-  navDots.innerHTML = '';
-  for (let i = 1; i < PAGES.length; i++) {
-    const dot = document.createElement('div');
-    dot.className = 'nav-dot';
-    dot.dataset.index = i;
-    dot.addEventListener('click', () => showPage(i));
-    navDots.appendChild(dot);
-  }
-}
-
-// ===== NAVIGATION =====
-function goToPage(index) {
-  showPage(index);
-}
-
-function nextPage() {
-  if (currentPage < PAGES.length - 1) {
-    showPage(currentPage + 1);
-  }
-}
-
-function prevPage() {
-  if (currentPage > 0) {
-    showPage(currentPage - 1);
-  }
-}
-
-// ===== UNLOCK =====
-function unlock() {
-  const input = document.getElementById("password");
-  const error = document.getElementById("error");
+// ===== KEYBOARD & CLICK NAVIGATION =====
+document.addEventListener('keydown', function(e) {
+  if (currentPage === 0) return; // Don't navigate from login
   
-  if (input.value.trim() === "01022026") {
-    error.classList.remove('show');
-    showPage(1); // Go to page2
+  if (e.key === 'ArrowRight' || e.key === ' ') {
+    if (currentPage < totalPages - 1) {
+      goToPage(currentPage + 1);
+      e.preventDefault();
+    }
+  } else if (e.key === 'ArrowLeft') {
+    if (currentPage > 0) {
+      goToPage(currentPage - 1);
+      e.preventDefault();
+    }
+  } else if (e.key === 'Escape') {
+    goToPage(0);
+    e.preventDefault();
+  }
+});
+
+// Click to advance (except on controls)
+document.addEventListener('click', function(e) {
+  if (currentPage === 0) return;
+  
+  // Don't advance if clicking on:
+  // - Password input or buttons
+  // - Navigation dots
+  // - Home button
+  // - Play button
+  // - Audio indicator
+  if (e.target.tagName === 'INPUT' || 
+      e.target.tagName === 'BUTTON' ||
+      e.target.closest('.dots') ||
+      e.target.closest('.home') ||
+      e.target.closest('.play-btn') ||
+      e.target.closest('.video-audio')) {
+    return;
+  }
+  
+  if (currentPage < totalPages - 1) {
+    goToPage(currentPage + 1);
+  }
+});
+
+// Swipe for mobile
+let touchStartX = 0;
+document.addEventListener('touchstart', function(e) {
+  touchStartX = e.touches[0].clientX;
+}, { passive: true });
+
+document.addEventListener('touchend', function(e) {
+  const touchEndX = e.changedTouches[0].clientX;
+  const diff = touchStartX - touchEndX;
+  
+  if (Math.abs(diff) > 50 && currentPage > 0) {
+    if (diff > 0 && currentPage < totalPages - 1) {
+      goToPage(currentPage + 1);
+    } else if (diff < 0 && currentPage > 0) {
+      goToPage(currentPage - 1);
+    }
+  }
+}, { passive: true });
+
+// Password enter key
+document.getElementById('password').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') {
+    checkPassword();
+  }
+});
+
+// Initial UI update
+updateUI();
+
+// Page visibility handling
+document.addEventListener('visibilitychange', function() {
+  if (document.hidden) {
+    // Pause everything when tab is hidden
+    if (bgmPlaying) bgm.pause();
+    if (video1 && !video1.paused) video1.pause();
+    if (finalVideo && !finalVideo.paused) finalVideo.pause();
+    if (voiceNote && !voiceNote.paused) voiceNote.pause();
   } else {
-    error.textContent = "Try 01022026";
-    error.classList.add('show');
-    input.value = '';
-    input.focus();
+    // Resume when tab is visible
+    if (currentPage >= 1 && currentPage <= 5 && bgmPlaying) {
+      bgm.play().catch(console.log);
+    } else if (currentPage === 2 && video1) {
+      video1.play().catch(console.log);
+    } else if (currentPage === 6 && finalVideo && !finalVideo.paused) {
+      finalVideo.play().catch(console.log);
+    } else if (currentPage === 7 && voiceNote && !voiceNote.paused) {
+      voiceNote.play().catch(console.log);
+    }
   }
-}
-
-// ===== ERROR HANDLING =====
-function handleMediaError(img, fallbackId) {
-  img.style.display = 'none';
-  const fallback = document.getElementById(fallbackId);
-  if (fallback) fallback.style.display = 'block';
-}
-
-function handleVideoError(fallbackId) {
-  const fallback = document.getElementById(fallbackId);
-  if (fallback) fallback.style.display = 'block';
-}
-
-function handleFinalVideoError(fallbackId) {
-  const fallback = document.getElementById(fallbackId);
-  if (fallback) fallback.style.display = 'block';
-  videoAudioIndicator.style.display = 'none';
-}
-
-// ===== INITIALIZATION =====
-document.addEventListener('DOMContentLoaded', () => {
-  // Setup
-  createNavDots();
-  setupVoiceNote();
-  
-  // Password enter
-  document.getElementById('password').addEventListener('keypress', e => {
-    if (e.key === 'Enter') unlock();
-  });
-  
-  // Simple click navigation
-  document.addEventListener('click', (e) => {
-    if (currentPage === 0) return;
-    if (e.target.tagName === 'BUTTON' || 
-        e.target.tagName === 'INPUT' ||
-        e.target.closest('.nav-dots') ||
-        e.target.closest('.home-btn') ||
-        e.target.closest('.video-audio-indicator') ||
-        e.target.closest('.play-btn') ||
-        e.target.closest('.voice-note-progress')) {
-      return;
-    }
-    
-    if (currentPage < PAGES.length - 1) {
-      nextPage();
-    }
-  });
-  
-  // Keyboard
-  document.addEventListener('keydown', (e) => {
-    switch(e.key) {
-      case 'ArrowRight':
-      case ' ':
-        if (currentPage > 0 && currentPage < PAGES.length - 1) {
-          nextPage();
-          e.preventDefault();
-        }
-        break;
-      case 'ArrowLeft':
-        if (currentPage > 0) {
-          prevPage();
-          e.preventDefault();
-        }
-        break;
-      case 'Escape':
-        showPage(0);
-        e.preventDefault();
-        break;
-      case ' ':
-        if (currentPage === 7) {
-          toggleVoiceNote();
-          e.preventDefault();
-        }
-        break;
-    }
-  });
-  
-  // Swipe
-  let touchStartX = 0;
-  document.addEventListener('touchstart', (e) => {
-    touchStartX = e.touches[0].clientX;
-  }, { passive: true });
-  
-  document.addEventListener('touchend', (e) => {
-    const touchEndX = e.changedTouches[0].clientX;
-    const diff = touchStartX - touchEndX;
-    
-    if (Math.abs(diff) > 50 && currentPage > 0) {
-      if (diff > 0 && currentPage < PAGES.length - 1) {
-        nextPage();
-      } else if (diff < 0) {
-        prevPage();
-      }
-    }
-  }, { passive: true });
-  
-  // Auto-focus
-  document.getElementById('password').focus();
 });
 </script>
 </body>
